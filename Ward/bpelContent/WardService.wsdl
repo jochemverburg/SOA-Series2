@@ -7,15 +7,23 @@
   xmlns:labcb="http://www.PAHospital.org/LabCallbackService/" xmlns:radcb="http://www.PAHospital.org/RadiologyCallbackService/"
   targetNamespace="http://www.PAHospital.org/WardService/">
 
+<import namespace="http://www.PAHospital.org/LabService/" location="LabService.wsdl"></import>
+<import namespace="http://www.PAHospital.org/RadiologyService/" location="RadService.wsdl"></import>
+<import namespace="http://www.PAHospital.org/LabCallbackService/" location="LabService-callback.wsdl"></import>
+<import namespace="http://www.PAHospital.org/RadiologyCallbackService/" location="RadService-callback.wsdl"></import>
+
+
   <types>
     <xsd:schema targetNamespace="http://www.PAHospital.org/WardService/">
 	  <xsd:element name="Patient">
 		<xsd:complexType>
-			<xsd:element name="PatientName" type="xsd:string" />
-            <xsd:element name="PatientStreet" type="xsd:string" />
-            <xsd:element name="PatientZipCode" type="xsd:int" />
-            <xsd:element name="PatientCity" type="xsd:string" />
-            <xsd:element name="PatientBirthday" type="xsd:date" />
+			<xsd:sequence>
+				<xsd:element name="PatientName" type="xsd:string" />
+	            <xsd:element name="PatientStreet" type="xsd:string" />
+	            <xsd:element name="PatientZipCode" type="xsd:int" />
+	            <xsd:element name="PatientCity" type="xsd:string" />
+	            <xsd:element name="PatientBirthday" type="xsd:date" />
+            </xsd:sequence>
 		</xsd:complexType>
 	  </xsd:element>
 	  <xsd:element name="PatientID" type="xsd:string" />
@@ -23,10 +31,12 @@
       <xsd:element name="RequestingUnit" type="xsd:string" />
 	  <xsd:element name="Transport">
 		<xsd:complexType>
-			<xsd:element name="TransportRequired" type="xsd:boolean" />
-            <xsd:element name="RequestingUnit" type="xsd:string" />
-            <xsd:element name="DestinationUnit" type="xsd:int" />
-            <xsd:element name="TransportationDate" type="xsd:dateTime" />
+			<xsd:sequence>
+				<xsd:element name="TransportRequired" type="xsd:boolean" />
+	            <xsd:element name="RequestingUnit" type="xsd:string" />
+	            <xsd:element name="DestinationUnit" type="xsd:int" />
+	            <xsd:element name="TransportationDate" type="xsd:dateTime" />
+            </xsd:sequence>
 		</xsd:complexType>
 	  </xsd:element>
 	  <xsd:element name="Date" type="xsd:date" />
