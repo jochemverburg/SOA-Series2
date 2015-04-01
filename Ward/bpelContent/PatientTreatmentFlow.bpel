@@ -33,7 +33,7 @@
 		<bpel:partnerLink name="ward" partnerLinkType="tns:Ward" myRole="ward"/>
 		<bpel:partnerLink name="lab" partnerLinkType="tns:Lab" myRole="testRequester" partnerRole="testExecutor"/>
 		<bpel:partnerLink name="epr" partnerLinkType="tns:Epr" partnerRole="directory"/>
-		<bpel:partnerLink name="rad" partnerLinkType="tns:Rad" myRole="radRequester" partnerRole="radExecutor""/>
+		<bpel:partnerLink name="rad" partnerLinkType="tns:Rad" myRole="radRequester" partnerRole="radExecutor"/>
 		<bpel:partnerLink name="transp" partnerLinkType="tns:Transp" partnerRole="transpExecutor"/>
 	</bpel:partnerLinks>
     <!-- ================================================================= -->         
@@ -48,13 +48,30 @@
 		<bpel:variable name="radDataReq" messageType="tns:EnterRadiologyOrderDataRequest"/>
 		<bpel:variable name="viewReq" messageType="tns:ViewReportsRequest"/>
 		<bpel:variable name="viewResp" messageType="tns:ViewReportsResponse"/>
-		<bpel:variable name="" messageType="tns:ValidateReportsRequest"/>
-		<bpel:variable name="" messageType="tns:GenerateDischargeLetterRequest"/>
-		<bpel:variable name="" messageType="tns:"/>
+		<bpel:variable name="eprReq" messageType="pat:GetPatientIDsRequest"/>
+		<bpel:variable name="eprResp" messageType="pat:GetPatientIDsResponse"/>
     </bpel:variables>
 	
 	<bpel:sequence name="main">
-		<bpel:empty name="Empty"></bpel:empty>
-	</bpel:sequence>    
+		
+        <bpel:receive name="Receive" partnerLink="ward" operation="OrderAdmission" portType="tns:Ward"></bpel:receive>
+        <bpel:assign validate="no" name="Assign">
+           
+            <bpel:copy>
+                <bpel:from><bpel:literal><s0:PatientName xmlns:s0="http://www.PAHospital.org/PatService/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">s0:PatientName</s0:PatientName>
+				</bpel:literal></bpel:from>
+                <bpel:to variable="eprReq" part="PatientName"></bpel:to>
+            </bpel:copy>
+            <bpel:copy>
+                <bpel:from part="PatientData" variable="admRequest">
+                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientName]]></bpel:query>
+                </bpel:from>
+                <bpel:to part="PatientName" variable="eprReq"></bpel:to>
+            </bpel:copy>
+        </bpel:assign>
+        
+        <bpel:invoke name="Invoke" partnerLink="epr" operation="GetPatientIDsByName" portType="pat:ElectronicPatientRecord" inputVariable="eprReq" outputVariable="eprResp"></bpel:invoke>
+        
+    </bpel:sequence>    
 </bpel:process>
 

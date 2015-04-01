@@ -2,16 +2,20 @@
 <definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
   xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:s0="http://www.PAHospital.org/WardService/"
   xmlns:lab="http://www.PAHospital.org/LabService/" xmlns:rad="http://www.PAHospital.org/RadiologyService/"
   xmlns:labcb="http://www.PAHospital.org/LabCallbackService/" xmlns:radcb="http://www.PAHospital.org/RadiologyCallbackService/"
+  xmlns:pat="http://www.PAHospital.org/PatService/" xmlns:transp="http://www.PAHospital.org/TransportationService/"
+  xmlns:tns="http://www.PAHospital.org/WardService/"
   targetNamespace="http://www.PAHospital.org/WardService/">
 
 <import namespace="http://www.PAHospital.org/LabService/" location="LabService.wsdl"></import>
 <import namespace="http://www.PAHospital.org/RadiologyService/" location="RadService.wsdl"></import>
 <import namespace="http://www.PAHospital.org/LabCallbackService/" location="LabService-callback.wsdl"></import>
 <import namespace="http://www.PAHospital.org/RadiologyCallbackService/" location="RadService-callback.wsdl"></import>
-
+<import namespace="http://www.PAHospital.org/PatService/" location="PatService.wsdl"></import>
+<import namespace="http://www.PAHospital.org/TransportationService/" location="TranspService.wsdl"></import>
 
   <types>
     <xsd:schema targetNamespace="http://www.PAHospital.org/WardService/">
@@ -98,6 +102,25 @@
       <input message="s0:GenerateDischargeLetterRequest" />
     </operation>
   </portType>
+  
+  <!--  partnerLinkTypes -->
+ 	<plnk:partnerLinkType name="Ward"> 
+         <plnk:role name="ward" portType="tns:Ward"/>
+    </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="Lab"> 
+         <plnk:role name="testRequester" portType="labcb:LabCallback"/>
+         <plnk:role name="testExecutor" portType="lab:Laboratory"/>
+    </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="Epr"> 
+         <plnk:role name="directory" portType="pat:ElectronicPatientRecord"/>
+    </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="Rad"> 
+         <plnk:role name="radRequester" portType="radcb:RadiologyCallback"/>
+         <plnk:role name="radExecutor" portType="rad:Radiology"/>
+    </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="Transp"> 
+         <plnk:role name="transpExecutor" portType="transp:Transportation"/>
+    </plnk:partnerLinkType>
 
   <binding name="WardBinding" type="s0:Ward">
     <soap:binding style="document"
