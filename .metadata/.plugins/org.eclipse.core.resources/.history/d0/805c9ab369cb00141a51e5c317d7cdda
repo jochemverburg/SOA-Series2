@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:loan="http://loans.org/loan">
+  <process name="loan:loanapproval">
+    <active>true</active>
+    <retired>false</retired>
+  </process>
+</deploy>
