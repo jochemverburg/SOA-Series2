@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:s0="http://www.PAHospital.org/WardService/"
+  xmlns:lab="http://www.PAHospital.org/LabService/" xmlns:rad="http://www.PAHospital.org/RadiologyService/"
+  xmlns:labcb="http://www.PAHospital.org/LabCallbackService/" xmlns:radcb="http://www.PAHospital.org/RadiologyCallbackService/"
+  targetNamespace="http://www.PAHospital.org/WardService/">
+
+  <types>
+    <xsd:schema targetNamespace="http://www.PAHospital.org/WardService/">
+	  <xsd:element name="Patient">
+		<xsd:complexType>
+			<xsd:element name="PatientName" type="xsd:string" />
+            <xsd:element name="PatientStreet" type="xsd:string" />
+            <xsd:element name="PatientZipCode" type="xsd:int" />
+            <xsd:element name="PatientCity" type="xsd:string" />
+            <xsd:element name="PatientBirthday" type="xsd:date" />
+		</xsd:complexType>
+	  </xsd:element>
+	  <xsd:element name="PatientID" type="xsd:string" />
+	  <xsd:element name="CaseID" type="xsd:string" />
+      <xsd:element name="RequestingUnit" type="xsd:string" />
+	  <xsd:element name="Transport">
+		<xsd:complexType>
+			<xsd:element name="TransportRequired" type="xsd:boolean" />
+            <xsd:element name="RequestingUnit" type="xsd:string" />
+            <xsd:element name="DestinationUnit" type="xsd:int" />
+            <xsd:element name="TransportationDate" type="xsd:dateTime" />
+		</xsd:complexType>
+	  </xsd:element>
+	  <xsd:element name="Date" type="xsd:date" />
+    </xsd:schema>
+  </types>
+
+  <message name="OrderAdmissionRequest">
+    <part name="PatientData" element="s0:Patient" />
+  </message>
+  <message name="OrderAdmissionResponse">
+    <part name="PatientID" element="s0:PatientID" />
+	<part name="CaseID" element="s0:CaseID" />
+  </message>
+  <message name="EnterLabTestOrderDataRequest">
+    <part name="LabTestData" element="lab:LabOrder" />
+	<part name="RequestingUnit" element="s0:RequestingUnit" />
+  </message>
+  <message name="EnterRadiologyOrderDataRequest">
+    <part name="RadOrderData" element="rad:RadiologyOrder" />
+	<part name="TransportData" element="s0:Transport" />
+	<part name="AppointmentDate" element="s0:Date" />
+  </message>
+  <message name="ViewReportsRequest">
+    <part name="PatientID" element="s0:PatientID" />
+	<part name="CaseID" element="s0:CaseID" />
+  </message>
+  <message name="ViewReportsResponse">
+	<part name="RadiologyReport" element="radcb:RadiologyReport" />
+	<part name="LabReport" element="labcb:LabReport" />
+  </message>
+  <message name="ValidateReportsRequest">
+    <part name="PatientID" element="s0:PatientID" />
+	<part name="CaseID" element="s0:CaseID" />
+  </message>
+  <message name="GenerateDischargeLetterRequest">
+    <part name="PatientID" element="s0:PatientID" />
+	<part name="CaseID" element="s0:CaseID" />
+  </message>
+
+  <portType name="Ward">
+	<operation name="OrderAdmission">
+      <input message="s0:OrderAdmissionRequest" />
+      <output message="s0:OrderAdmissionResponse" />
+    </operation>
+    <operation name="EnterLabTestOrderData">
+      <input message="s0:EnterLabTestOrderDataRequest" />
+    </operation>
+    <operation name="EnterRadiologyOrderData">
+      <input message="s0:EnterRadiologyOrderDataRequest" />
+    </operation>
+	<operation name="ViewReports">
+      <input message="s0:ViewReportsRequest" />
+      <output message="s0:ViewReportsResponse" />
+    </operation>
+    <operation name="ValidateReports">
+      <input message="s0:ValidateReportsRequest" />
+    </operation>
+    <operation name="GenerateDischargeLetter">
+      <input message="s0:GenerateDischargeLetterRequest" />
+    </operation>
+  </portType>
+
+  <binding name="WardBinding" type="s0:Ward">
+    <soap:binding style="document"
+      transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="EnterLabTestOrderData">
+      <soap:operation
+        soapAction="http://www.PAHospital.org/WardService/EnterLabTestOrderData" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="EnterRadiologyOrderData">
+      <soap:operation
+        soapAction="http://www.PAHospital.org/WardService/EnterRadiologyOrderData" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+	<operation name="ViewReports">
+      <soap:operation
+        soapAction="http://www.PAHospital.org/WardService/ValidateReports" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="ValidateReports">
+      <soap:operation
+        soapAction="http://www.PAHospital.org/WardService/ValidateReports" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="GenerateDischargeLetter">
+      <soap:operation soapAction="http://www.PAHospital.org/WardService/GenerateDischargeLetter" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+    </operation>
+  </binding>
+
+  <!-- Service defines the address of Web service -->
+  <service name="WardService">
+    <port name="WardPort" binding="s0:WardBinding">
+      <soap:address location="http://www.PAHospital.org/WardService" />
+    </port>
+  </service>
+  
+</definitions>
