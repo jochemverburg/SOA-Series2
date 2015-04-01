@@ -29,11 +29,30 @@
 	<bpel:import location="TranspService.wsdl" namespace="http://www.PAHospital.org/TransportationService/" 
 	        importType="http://schemas.xmlsoap.org/wsdl/" />
 
+	<bpel:partnerLinks>
+		<bpel:partnerLink name="ward" partnerLinkType="tns:Ward" myRole="ward"/>
+		<bpel:partnerLink name="lab" partnerLinkType="tns:Lab" myRole="testRequester" partnerRole="testExecutor"/>
+		<bpel:partnerLink name="epr" partnerLinkType="tns:Epr" partnerRole="directory"/>
+		<bpel:partnerLink name="rad" partnerLinkType="tns:Rad" myRole="radRequester" partnerRole="radExecutor""/>
+		<bpel:partnerLink name="transp" partnerLinkType="tns:Transp" partnerRole="transpExecutor"/>
+	</bpel:partnerLinks>
     <!-- ================================================================= -->         
     <!-- ORCHESTRATION LOGIC                                               -->
     <!-- Set of activities coordinating the flow of messages across the    -->
     <!-- services integrated within this business process                  -->
     <!-- ================================================================= -->         
+	<bpel:variables>
+		<bpel:variable name="admRequest" messageType="tns:OrderAdmissionRequest"/>
+		<bpel:variable name="admResp" messageType="tns:OrderAdmissionResponse"/>
+		<bpel:variable name="labDataReq" messageType="tns:EnterLabTestOrderDataRequest"/>
+		<bpel:variable name="radDataReq" messageType="tns:EnterRadiologyOrderDataRequest"/>
+		<bpel:variable name="viewReq" messageType="tns:ViewReportsRequest"/>
+		<bpel:variable name="viewResp" messageType="tns:ViewReportsResponse"/>
+		<bpel:variable name="" messageType="tns:ValidateReportsRequest"/>
+		<bpel:variable name="" messageType="tns:GenerateDischargeLetterRequest"/>
+		<bpel:variable name="" messageType="tns:"/>
+    </bpel:variables>
+	
 	<bpel:sequence name="main">
 		<bpel:empty name="Empty"></bpel:empty>
 	</bpel:sequence>    
