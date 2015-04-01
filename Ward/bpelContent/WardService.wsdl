@@ -176,7 +176,7 @@
   <!-- Service defines the address of Web service -->
   <service name="WardService">
     <port name="WardPort" binding="s0:WardBinding">
-      <soap:address location="http://www.PAHospital.org/WardService" />
+      <soap:address location="http://localhost:8080/ode/processes/WardService/" />
     </port>
   </service>
   

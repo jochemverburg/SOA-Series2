@@ -50,12 +50,17 @@
 		<bpel:variable name="viewResp" messageType="tns:ViewReportsResponse"/>
 		<bpel:variable name="eprReq" messageType="pat:GetPatientIDsRequest"/>
 		<bpel:variable name="eprResp" messageType="pat:GetPatientIDsResponse"/>
+		<bpel:variable name="patDataReq" messageType="pat:GetPatientByIDRequest"/>
+		<bpel:variable name="patDataResp" messageType="pat:GetPatientByIDResponse"/>
+		<bpel:variable name="createEPRReq" messageType="pat:CreatePatientRecordRequest"/>
+		<bpel:variable name="createEPRResp" messageType="pat:CreatePatientRecordResponse"/>
     </bpel:variables>
 	
 	<bpel:sequence name="main">
 		
-        <bpel:receive name="Receive" partnerLink="ward" operation="OrderAdmission" portType="tns:Ward"></bpel:receive>
-        <bpel:assign validate="no" name="Assign">
+        
+        <bpel:receive name="receiveAdmissionOrder" partnerLink="ward" operation="OrderAdmission" portType="tns:Ward" createInstance="yes"></bpel:receive>
+        <bpel:assign validate="no" name="assignName">
            
             <bpel:copy>
                 <bpel:from><bpel:literal><s0:PatientName xmlns:s0="http://www.PAHospital.org/PatService/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">s0:PatientName</s0:PatientName>
@@ -70,7 +75,148 @@
             </bpel:copy>
         </bpel:assign>
         
-        <bpel:invoke name="Invoke" partnerLink="epr" operation="GetPatientIDsByName" portType="pat:ElectronicPatientRecord" inputVariable="eprReq" outputVariable="eprResp"></bpel:invoke>
+        <bpel:invoke name="getIDsByName" partnerLink="epr" operation="GetPatientIDsByName" portType="pat:ElectronicPatientRecord" inputVariable="eprReq" outputVariable="eprResp"></bpel:invoke>
+        
+        
+        
+        
+        
+        <bpel:forEach parallel="no" counterName="Counter" name="LoopThroughIDsList">
+            <bpel:startCounterValue expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                <![CDATA[0]]>
+            </bpel:startCounterValue>
+            <bpel:finalCounterValue expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[count($eprResp.PatientIDsList)]]></bpel:finalCounterValue>
+            <bpel:scope name="Scope">
+                <bpel:sequence name="LoopSequence">
+                    <bpel:assign validate="no" name="assignPatientID">
+                        <bpel:copy>
+                            <bpel:from><bpel:literal><s0:PatientID xmlns:s0="http://www.PAHospital.org/PatService/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">s0:PatientID</s0:PatientID>
+</bpel:literal></bpel:from>
+                            <bpel:to variable="patDataReq" part="PatientID"></bpel:to>
+                        </bpel:copy>
+                        <bpel:copy>
+                            <bpel:from part="PatientIDsList" variable="eprResp">
+                                <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                    <![CDATA[PatientID[$Counter]]]>
+                                </bpel:query>
+                            </bpel:from>
+                            <bpel:to part="PatientID" variable="patDataReq"></bpel:to>
+                        </bpel:copy>
+                    </bpel:assign>
+                    <bpel:invoke name="getPatientInfo" partnerLink="epr" operation="GetPatientByID" portType="pat:ElectronicPatientRecord" inputVariable="patDataReq" outputVariable="patDataResp"></bpel:invoke>
+                    
+                    <bpel:if name="CheckIfSamePatient">
+                        <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[$admRequest.PatientData[PatientBirthday]=$patDataResp.Patient[PatientBirthday]]]></bpel:condition>
+                        <bpel:assign validate="no" name="AssignPatientID">
+                            <bpel:copy>
+                                <bpel:from><bpel:literal><tns:PatientID xmlns:tns="http://www.PAHospital.org/WardService/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">tns:PatientID</tns:PatientID>
+</bpel:literal></bpel:from>
+                                <bpel:to variable="admResp" part="PatientID"></bpel:to>
+                            </bpel:copy>
+                            <bpel:copy>
+                                <bpel:from part="Patient" variable="patDataResp">
+                                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientID]]></bpel:query>
+                                </bpel:from>
+                                <bpel:to part="PatientID" variable="admResp"></bpel:to>
+                            </bpel:copy>
+                        </bpel:assign>
+                    </bpel:if>
+                </bpel:sequence>
+            </bpel:scope>
+        </bpel:forEach>
+        <bpel:if name="CheckIfExists">
+            <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[$admResp.PatientID=""]]></bpel:condition>
+            <bpel:sequence>
+                <bpel:assign validate="no" name="AssignIDAndData">
+                    <bpel:copy>
+                        <bpel:from><bpel:literal><s0:Patient xmlns:s0="http://www.PAHospital.org/PatService/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <PatientID>PatientID</PatientID>
+  <PatientName>PatientName</PatientName>
+  <PatientStreet>PatientStreet</PatientStreet>
+  <PatientZipCode>0</PatientZipCode>
+  <PatientCity>PatientCity</PatientCity>
+  <PatientBirthday>2001-01-01</PatientBirthday>
+</s0:Patient>
+</bpel:literal></bpel:from>
+                        <bpel:to variable="createEPRReq" part="Patient"></bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                            <![CDATA[$admRequest.PatientData[PatientName]+"1"]]>
+                        </bpel:from>
+                        <bpel:to part="Patient" variable="createEPRReq">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[PatientID]]>
+                            </bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="PatientData" variable="admRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientName]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="Patient" variable="createEPRReq">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientName]]></bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="PatientData" variable="admRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientStreet]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="Patient" variable="createEPRReq">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientStreet]]></bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="PatientData" variable="admRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientZipCode]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="Patient" variable="createEPRReq">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientZipCode]]></bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="PatientData" variable="admRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientCity]]></bpel:query>
+                        </bpel:from>
+                        <bpel:to part="Patient" variable="createEPRReq">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientCity]]></bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="PatientData" variable="admRequest">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                <![CDATA[PatientBirthday]]>
+                            </bpel:query>
+                        </bpel:from>
+                        <bpel:to part="Patient" variable="createEPRReq">
+                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientBirthday]]></bpel:query>
+                        </bpel:to>
+                    </bpel:copy>
+                </bpel:assign>
+                <bpel:invoke name="MakeRecord" partnerLink="epr" operation="CreatePatientRecord" portType="pat:ElectronicPatientRecord" inputVariable="createEPRReq" outputVariable="createEPRResp"></bpel:invoke>
+                
+                <bpel:assign validate="no" name="AssignPatientID">
+                    <bpel:copy>
+                        <bpel:from><bpel:literal><tns:PatientID xmlns:tns="http://www.PAHospital.org/WardService/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">tns:PatientID</tns:PatientID>
+</bpel:literal></bpel:from>
+                        <bpel:to variable="admResp" part="PatientID"></bpel:to>
+                    </bpel:copy>
+                    <bpel:copy>
+                        <bpel:from part="PatientID" variable="createEPRResp"></bpel:from>
+                        <bpel:to part="PatientID" variable="admResp"></bpel:to>
+                    </bpel:copy>
+                </bpel:assign>
+            </bpel:sequence>
+        </bpel:if>
+        <bpel:assign validate="no" name="AssignCaseID">
+            <bpel:copy>
+                <bpel:from>
+                    <bpel:literal xml:space="preserve">1</bpel:literal>
+                </bpel:from>
+                <bpel:to part="CaseID" variable="admResp"></bpel:to>
+            </bpel:copy>
+        </bpel:assign>
+        <bpel:reply name="ReplyAdmissionOrder" partnerLink="ward" operation="OrderAdmission" portType="tns:Ward" variable="admResp"></bpel:reply>
         
     </bpel:sequence>    
 </bpel:process>
