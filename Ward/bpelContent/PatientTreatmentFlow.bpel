@@ -31,10 +31,10 @@
 
 	<bpel:partnerLinks>
 		<bpel:partnerLink name="ward" partnerLinkType="tns:Ward" myRole="ward"/>
-		<bpel:partnerLink name="lab" partnerLinkType="tns:Lab" myRole="testRequester" partnerRole="testExecutor"/>
+		<!-- <bpel:partnerLink name="lab" partnerLinkType="tns:Lab" myRole="testRequester" partnerRole="testExecutor"/>-->
 		<bpel:partnerLink name="epr" partnerLinkType="tns:Epr" partnerRole="directory"/>
-		<bpel:partnerLink name="rad" partnerLinkType="tns:Rad" myRole="radRequester" partnerRole="radExecutor"/>
-		<bpel:partnerLink name="transp" partnerLinkType="tns:Transp" partnerRole="transpExecutor"/>
+		<!-- <bpel:partnerLink name="rad" partnerLinkType="tns:Rad" myRole="radRequester" partnerRole="radExecutor"/>
+		<bpel:partnerLink name="transp" partnerLinkType="tns:Transp" partnerRole="transpExecutor"/>-->
 	</bpel:partnerLinks>
     <!-- ================================================================= -->         
     <!-- ORCHESTRATION LOGIC                                               -->
@@ -59,7 +59,7 @@
 	<bpel:sequence name="main">
 		
         
-        <bpel:receive name="receiveAdmissionOrder" partnerLink="ward" operation="OrderAdmission" portType="tns:Ward" createInstance="yes"></bpel:receive>
+        <bpel:receive name="receiveAdmissionOrder" partnerLink="ward" operation="OrderAdmission" portType="tns:Ward" createInstance="yes" variable="admRequest"></bpel:receive>
         <bpel:assign validate="no" name="assignName">
            
             <bpel:copy>
