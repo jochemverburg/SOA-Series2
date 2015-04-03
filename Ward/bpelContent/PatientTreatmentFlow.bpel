@@ -111,13 +111,17 @@
                             <bpel:copy>
                                 <bpel:from><bpel:literal><tns:PatientID xmlns:tns="http://www.PAHospital.org/WardService/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">tns:PatientID</tns:PatientID>
 </bpel:literal></bpel:from>
-                                <bpel:to variable="admResp" part="PatientID"></bpel:to>
+                                <bpel:to variable="admResp" part="ID">
+                                	<bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientID]]></bpel:query>
+                                </bpel:to>
                             </bpel:copy>
                             <bpel:copy>
                                 <bpel:from part="Patient" variable="patDataResp">
                                     <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientID]]></bpel:query>
                                 </bpel:from>
-                                <bpel:to part="PatientID" variable="admResp"></bpel:to>
+                                <bpel:to part="ID" variable="admResp">
+									<bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientID]]></bpel:query>
+								</bpel:to>
                             </bpel:copy>
                         </bpel:assign>
                     </bpel:if>
@@ -125,7 +129,7 @@
             </bpel:scope>
         </bpel:forEach>
         <bpel:if name="CheckIfExists">
-            <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[$admResp.PatientID=""]]></bpel:condition>
+            <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[$admResp.ID[PatientID]=""]]></bpel:condition>
             <bpel:sequence>
                 <bpel:assign validate="no" name="AssignIDAndData">
                     <bpel:copy>

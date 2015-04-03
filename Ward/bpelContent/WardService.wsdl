@@ -30,20 +30,52 @@
             </xsd:sequence>
 		</xsd:complexType>
 	  </xsd:element>
-	  <xsd:element name="PatientID" type="xsd:string" />
-	  <xsd:element name="CaseID" type="xsd:string" />
-      <xsd:element name="RequestingUnit" type="xsd:string" />
-	  <xsd:element name="Transport">
-		<xsd:complexType>
+	  <xsd:complexType name="Transport">
 			<xsd:sequence>
 				<xsd:element name="TransportRequired" type="xsd:boolean" />
 	            <xsd:element name="RequestingUnit" type="xsd:string" />
 	            <xsd:element name="DestinationUnit" type="xsd:int" />
 	            <xsd:element name="TransportationDate" type="xsd:dateTime" />
             </xsd:sequence>
+	  </xsd:complexType>
+	  
+	  <!-- Multiple elements for each message defined -->
+      <xsd:element name="LabTestOrderData">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="LabTestData" type="lab:LabOrderData" />
+				<xsd:element name="RequestingUnit" type="xsd:string" />
+			</xsd:sequence>
 		</xsd:complexType>
 	  </xsd:element>
-	  <xsd:element name="Date" type="xsd:date" />
+	  
+      <xsd:element name="RadiologyOrderData">
+		<xsd:complexType>
+			<xsd:sequence>
+			    <xsd:element name="RadOrderData" type="rad:RadiologyOrder" />
+				<xsd:element name="TransportData" type="tns:Transport" />
+				<xsd:element name="AppointmentDate" type="xsd:date" />
+			</xsd:sequence>
+		</xsd:complexType>
+	  </xsd:element>
+	  
+	  <xsd:element name="Identifier">
+		<xsd:complexType>
+			<xsd:sequence>
+			    <xsd:element name="PatientID" type="xsd:string" />
+				<xsd:element name="CaseID" type="xsd:string" />
+			</xsd:sequence>
+		</xsd:complexType>
+	  </xsd:element>
+	  
+	  <xsd:element name="Reports">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="RadiologyReport" type="radcb:RadiologyReport" />
+				<xsd:element name="LabReport" type="labcb:LabReport" />
+			</xsd:sequence>
+		</xsd:complexType>
+	  </xsd:element>
     </xsd:schema>
   </types>
 
@@ -51,33 +83,25 @@
     <part name="PatientData" element="s0:Patient" />
   </message>
   <message name="OrderAdmissionResponse">
-    <part name="PatientID" element="s0:PatientID" />
-	<part name="CaseID" element="s0:CaseID" />
+    <part name="ID" element="s0:Identifier" />
   </message>
   <message name="EnterLabTestOrderDataRequest">
-    <part name="LabTestData" element="lab:LabOrder" />
-	<part name="RequestingUnit" element="s0:RequestingUnit" />
+    <part name="LabTestData" element="s0:LabTestOrderData" />
   </message>
   <message name="EnterRadiologyOrderDataRequest">
-    <part name="RadOrderData" element="rad:RadiologyOrder" />
-	<part name="TransportData" element="s0:Transport" />
-	<part name="AppointmentDate" element="s0:Date" />
+    <part name="RadOrderData" element="s0:RadiologyOrderData" />
   </message>
   <message name="ViewReportsRequest">
-    <part name="PatientID" element="s0:PatientID" />
-	<part name="CaseID" element="s0:CaseID" />
+    <part name="ID" element="s0:Identifier" />
   </message>
   <message name="ViewReportsResponse">
-	<part name="RadiologyReport" element="radcb:RadiologyReport" />
-	<part name="LabReport" element="labcb:LabReport" />
+	<part name="Reports" element="s0:Reports" />
   </message>
   <message name="ValidateReportsRequest">
-    <part name="PatientID" element="s0:PatientID" />
-	<part name="CaseID" element="s0:CaseID" />
+    <part name="ID" element="s0:Identifier" />
   </message>
   <message name="GenerateDischargeLetterRequest">
-    <part name="PatientID" element="s0:PatientID" />
-	<part name="CaseID" element="s0:CaseID" />
+    <part name="ID" element="s0:Identifier" />
   </message>
 
   <portType name="Ward">
