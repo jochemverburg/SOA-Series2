@@ -1,0 +1,8 @@
+Gebruikte poorten voor Tomcat 8.0-server
+In conf/server.xml aangepast (van -> naar)
+SHUTDOWN: 8005 -> 8006
+HTTP: 8080 -> 8008
+ASP: 8009 -> 8007
+
+Alle .aar moet je via het axis2-admin panel toevoegen en zouden dan als het goed is moeten werken (niet zeker of dat dan bij jou ook werkt). De locaties van deze services kun je vinden in ons project in de corresponderende WSDL-files.
+De .war-bestanden moet je in de Tomcat-server toevoegen in de webapps-directory (waar als het goed is ook een axis2.war staat), dan start hij gewoon mee op als Tomcat start.
