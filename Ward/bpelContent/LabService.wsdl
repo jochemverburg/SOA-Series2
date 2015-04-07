@@ -7,8 +7,8 @@
 
   <types>
     <xsd:schema targetNamespace="http://www.PAHospital.org/LabService/">
-      <xsd:element name="LabOrder" type="s0:LabOrderData" />
-      <xsd:complexType name="LabOrderData">
+      <xsd:element name="LabOrder">
+        <xsd:complexType>
           <xsd:sequence>
             <xsd:element name="PatientID" type="xsd:string" />
             <xsd:element name="CaseID" type="xsd:string" />
@@ -25,6 +25,7 @@
               maxOccurs="unbounded" />
           </xsd:sequence>
         </xsd:complexType>
+      </xsd:element>
       <xsd:element name="LabOrderId" type="xsd:string" />
     </xsd:schema>
   </types>
@@ -61,7 +62,7 @@
   <!-- Service defines the address of Web service -->
   <service name="LabService">
     <port name="LabPort" binding="s0:LabBinding">
-      <soap:address location="http://localhost:8008/axis2/services/LabService" />
+      <soap:address location="http://www.PAHospital.org/LabService" />
     </port>
   </service>
   

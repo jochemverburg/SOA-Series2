@@ -1,129 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
-  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
-  xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
   xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
-  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:s0="http://www.PAHospital.org/WardService/"
-  xmlns:lab="http://www.PAHospital.org/LabService/" xmlns:rad="http://www.PAHospital.org/RadiologyService/"
-  xmlns:labcb="http://www.PAHospital.org/LabCallbackService/" xmlns:radcb="http://www.PAHospital.org/RadiologyCallbackService/"
-  xmlns:pat="http://www.PAHospital.org/PatService/" xmlns:transp="http://www.PAHospital.org/TransportationService/"
+  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" 
+  xmlns:lab="http://www.PAHospital.org/LabService/" 
+  xmlns:rad="http://www.PAHospital.org/RadiologyService/"
+  xmlns:labcb="http://www.PAHospital.org/LabCallbackService/" 
+  xmlns:radcb="http://www.PAHospital.org/RadiologyCallbackService/"
+  xmlns:pat="http://www.PAHospital.org/PatService/" 
+  xmlns:transp="http://www.PAHospital.org/TransportationService/"
   xmlns:tns="http://www.PAHospital.org/WardService/"
   targetNamespace="http://www.PAHospital.org/WardService/">
+ 	
+<import namespace="http://www.PAHospital.org/LabService/" location="LabService.wsdl"/>
+<import namespace="http://www.PAHospital.org/RadiologyService/" location="RadService.wsdl"/>
+<import namespace="http://www.PAHospital.org/LabCallbackService/" location="LabService-callback.wsdl"/>
+<import namespace="http://www.PAHospital.org/RadiologyCallbackService/" location="RadService-callback.wsdl"/>
+<import namespace="http://www.PAHospital.org/PatService/" location="PatService.wsdl"/>
+<import namespace="http://www.PAHospital.org/TransportationService/" location="TranspService.wsdl"/>
 
-<import namespace="http://www.PAHospital.org/LabService/" location="LabService.wsdl"></import>
-<import namespace="http://www.PAHospital.org/RadiologyService/" location="RadService.wsdl"></import>
-<import namespace="http://www.PAHospital.org/LabCallbackService/" location="LabService-callback.wsdl"></import>
-<import namespace="http://www.PAHospital.org/RadiologyCallbackService/" location="RadService-callback.wsdl"></import>
-<import namespace="http://www.PAHospital.org/PatService/" location="PatService.wsdl"></import>
-<import namespace="http://www.PAHospital.org/TransportationService/" location="TranspService.wsdl"></import>
 
-  <types>
-    <xsd:schema targetNamespace="http://www.PAHospital.org/WardService/">
-	  <xsd:element name="Patient">
-		<xsd:complexType>
-			<xsd:sequence>
-				<xsd:element name="PatientName" type="xsd:string" />
-	            <xsd:element name="PatientStreet" type="xsd:string" />
-	            <xsd:element name="PatientZipCode" type="xsd:int" />
-	            <xsd:element name="PatientCity" type="xsd:string" />
-	            <xsd:element name="PatientBirthday" type="xsd:date" />
-            </xsd:sequence>
-		</xsd:complexType>
-	  </xsd:element>
-	  <xsd:complexType name="Transport">
-			<xsd:sequence>
-				<xsd:element name="TransportRequired" type="xsd:boolean" />
-	            <xsd:element name="RequestingUnit" type="xsd:string" />
-	            <xsd:element name="DestinationUnit" type="xsd:int" />
-	            <xsd:element name="TransportationDate" type="xsd:dateTime" />
-            </xsd:sequence>
-	  </xsd:complexType>
-	  
-	  <!-- Multiple elements for each message defined -->
-      <xsd:element name="LabTestOrderData">
-		<xsd:complexType>
-			<xsd:sequence>
-				<xsd:element name="LabTestData" type="lab:LabOrderData" />
-				<xsd:element name="RequestingUnit" type="xsd:string" />
-			</xsd:sequence>
-		</xsd:complexType>
-	  </xsd:element>
-	  
-      <xsd:element name="RadiologyOrderData">
-		<xsd:complexType>
-			<xsd:sequence>
-			    <xsd:element name="RadOrderData" type="rad:RadiologyOrder" />
-				<xsd:element name="TransportData" type="tns:Transport" />
-				<xsd:element name="AppointmentDate" type="xsd:date" />
-			</xsd:sequence>
-		</xsd:complexType>
-	  </xsd:element>
-	  
-	  <xsd:element name="Identifier">
-		<xsd:complexType>
-			<xsd:sequence>
-			    <xsd:element name="PatientID" type="xsd:string" />
-				<xsd:element name="CaseID" type="xsd:string" />
-			</xsd:sequence>
-		</xsd:complexType>
-	  </xsd:element>
-	  
-	  <xsd:element name="Reports">
-		<xsd:complexType>
-			<xsd:sequence>
-				<xsd:element name="RadiologyReport" type="radcb:RadiologyReport" />
-				<xsd:element name="LabReport" type="labcb:LabReport" />
-			</xsd:sequence>
-		</xsd:complexType>
-	  </xsd:element>
-    </xsd:schema>
-  </types>
 
   <message name="OrderAdmissionRequest">
-    <part name="PatientData" element="s0:Patient" />
+    <part name="PatientData" element="pat:Patient" />
   </message>
   <message name="OrderAdmissionResponse">
-    <part name="ID" element="s0:Identifier" />
+    <part name="ID" element="xsd:string" />
   </message>
   <message name="EnterLabTestOrderDataRequest">
-    <part name="LabTestData" element="s0:LabTestOrderData" />
+    <part name="LabTestData" element="lab:LabOrder" />
   </message>
   <message name="EnterRadiologyOrderDataRequest">
-    <part name="RadOrderData" element="s0:RadiologyOrderData" />
+    <part name="RadOrderData" element="rad:RadiologyOrder" />
   </message>
-  <message name="ViewReportsRequest">
-    <part name="ID" element="s0:Identifier" />
+  <message name="ViewLabReportRequest">
+    <part name="ID" element="xsd:string" />
   </message>
-  <message name="ViewReportsResponse">
-	<part name="Reports" element="s0:Reports" />
+    <message name="ViewRadiologyReportRequest">
+    <part name="ID" element="xsd:string" />
+  </message>
+  <message name="ViewLabReportResponse">
+	<part name="LabReport" element="labcb:LabReport" />
+  </message>
+	<message name="ViewRadiologyReportResponse">
+	<part name="RadReport" element="radcb:RadiologyReport" />
   </message>
   <message name="ValidateReportsRequest">
-    <part name="ID" element="s0:Identifier" />
+    <part name="ID" element="xsd:string" />
   </message>
   <message name="GenerateDischargeLetterRequest">
-    <part name="ID" element="s0:Identifier" />
+    <part name="ID" element="xsd:string" />
   </message>
 
   <portType name="Ward">
 	<operation name="OrderAdmission">
-      <input message="s0:OrderAdmissionRequest" />
-      <output message="s0:OrderAdmissionResponse" />
+      <input message="tns:OrderAdmissionRequest" />
+      <output message="tns:OrderAdmissionResponse" />
     </operation>
     <operation name="EnterLabTestOrderData">
-      <input message="s0:EnterLabTestOrderDataRequest" />
+      <input message="tns:EnterLabTestOrderDataRequest" />
     </operation>
     <operation name="EnterRadiologyOrderData">
-      <input message="s0:EnterRadiologyOrderDataRequest" />
+      <input message="tns:EnterRadiologyOrderDataRequest" />
     </operation>
-	<operation name="ViewReports">
-      <input message="s0:ViewReportsRequest" />
-      <output message="s0:ViewReportsResponse" />
+	<operation name="ViewLabReport">
+      <input message="tns:ViewLabReportRequest" />
+      <output message="tns:ViewLabReportResponse" />
+    </operation>
+    <operation name="ViewRadReport">
+      <input message="tns:ViewRadiologyReportRequest" />
+      <output message="tns:ViewRadiologyReportResponse" />
     </operation>
     <operation name="ValidateReports">
-      <input message="s0:ValidateReportsRequest" />
+      <input message="tns:ValidateReportsRequest" />
     </operation>
     <operation name="GenerateDischargeLetter">
-      <input message="s0:GenerateDischargeLetterRequest" />
+      <input message="tns:GenerateDischargeLetterRequest" />
     </operation>
   </portType>
   
@@ -146,7 +101,7 @@
          <plnk:role name="transpExecutor" portType="transp:Transportation"/>
     </plnk:partnerLinkType>
 
-  <binding name="WardBinding" type="s0:Ward">
+  <binding name="WardBinding" type="tns:Ward">
     <soap:binding style="document"
       transport="http://schemas.xmlsoap.org/soap/http" />
     <operation name="EnterLabTestOrderData">
@@ -169,7 +124,17 @@
         <soap:body use="literal" />
       </output>
     </operation>
-	<operation name="ViewReports">
+	<operation name="ViewLabReport">
+      <soap:operation
+        soapAction="http://www.PAHospital.org/WardService/ValidateReports" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="ViewRadReport">
       <soap:operation
         soapAction="http://www.PAHospital.org/WardService/ValidateReports" />
       <input>
@@ -199,7 +164,7 @@
 
   <!-- Service defines the address of Web service -->
   <service name="WardService">
-    <port name="WardPort" binding="s0:WardBinding">
+    <port name="WardPort" binding="tns:WardBinding">
       <soap:address location="http://localhost:8080/ode/processes/WardService/" />
     </port>
   </service>
