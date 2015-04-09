@@ -26,7 +26,7 @@
 			partnerRole="directory" />
 		<bpel:partnerLink name="rad" partnerLinkType="tns:Rad"
 			myRole="radRequester" partnerRole="radExecutor" />
-		<bpel:partnerLink name="transp" partnerLinkType="tns:transp" myRole="transpRequester" partnerRole="transpExecutor" />
+		<bpel:partnerLink name="transp" partnerLinkType="tns:Transp" partnerRole="transpExecutor" />
 		
 	</bpel:partnerLinks>
 	<!-- ================================================================= -->
@@ -79,7 +79,7 @@
         
        <bpel:sequence>
        <bpel:targets>
-       		<bpel:target linkName="admission-to-patientcheck"><bpel:target />
+       		<bpel:target linkName="admission-to-patientcheck"></bpel:target>
        </bpel:targets>
         <bpel:sources>
 	        	<bpel:source linkName="start-to-lab"></bpel:source>
