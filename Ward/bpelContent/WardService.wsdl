@@ -21,26 +21,33 @@
 <import namespace="http://www.PAHospital.org/RadiologyCallbackService/" location="RadService-callback.wsdl"/>
 <import namespace="http://www.PAHospital.org/PatService/" location="PatService.wsdl"/>
 <import namespace="http://www.PAHospital.org/TransportationService/" location="TranspService.wsdl"/>
+<types>
+	<xsd:schema targetNamespace="http://www.PAHospital.org/WardService/">
+		<xsd:element name="ID" type="xsd:string"></xsd:element>
+		<xsd:element name="TransportRequired" type="xsd:boolean"></xsd:element>
+	</xsd:schema>
 
+</types>
 
 
   <message name="OrderAdmissionRequest">
     <part name="PatientData" element="pat:Patient" />
   </message>
   <message name="OrderAdmissionResponse">
-    <part name="ID" element="xsd:string" />
+    <part name="PatientID" element="tns:ID" />
   </message>
   <message name="EnterLabTestOrderDataRequest">
     <part name="LabTestData" element="lab:LabOrder" />
   </message>
   <message name="EnterRadiologyOrderDataRequest">
     <part name="RadOrderData" element="rad:RadiologyOrder" />
+    <part name="TransportRequired" element="tns:TransportRequired"/>
   </message>
   <message name="ViewLabReportRequest">
-    <part name="ID" element="xsd:string" />
+    <part name="PatientID" element="tns:ID" />
   </message>
     <message name="ViewRadiologyReportRequest">
-    <part name="ID" element="xsd:string" />
+    <part name="PatientID" element="tns:ID" />
   </message>
   <message name="ViewLabReportResponse">
 	<part name="LabReport" element="labcb:LabReport" />
@@ -49,10 +56,10 @@
 	<part name="RadReport" element="radcb:RadiologyReport" />
   </message>
   <message name="ValidateReportsRequest">
-    <part name="ID" element="xsd:string" />
+    <part name="PatientID" element="tns:ID" />
   </message>
   <message name="GenerateDischargeLetterRequest">
-    <part name="ID" element="xsd:string" />
+    <part name="PatientID" element="tns:ID" />
   </message>
 
   <portType name="Ward">
