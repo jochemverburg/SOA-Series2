@@ -2,7 +2,7 @@
 <extensionmodel:ExtensionMap xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:extensionmodel="http:///extensionmodel.ecore" xmlns:org.eclipse.bpel.ui.uiextensionmodel="http:///org/eclipse/bpel/ui/uiextensionmodel.ecore" namespace="http://org.eclipse.bpel.ui/">
   <extensions>
     <extendedObject href="PatientTreatmentFlow.bpel#/"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1428587791867"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1428669670000"/>
   </extensions>
   <extensions>
     <extendedObject href="PatientTreatmentFlow.bpel#//@variables/@children.0"/>
@@ -61,10 +61,6 @@
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
   </extensions>
   <extensions>
-    <extendedObject href="PatientTreatmentFlow.bpel#//@activity"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension" width="774" height="894"/>
-  </extensions>
-  <extensions>
     <extendedObject href="PatientTreatmentFlow.bpel#//@variables/@children.14"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
   </extensions>
@@ -87,18 +83,6 @@
   <extensions>
     <extendedObject href="PatientTreatmentFlow.bpel#//@variables/@children.19"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@links/@children.2"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:LinkExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@links/@children.1"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:LinkExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@links/@children.0"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:LinkExtension"/>
   </extensions>
   <extensions>
     <extendedObject href="PatientTreatmentFlow.bpel#//@variables/@children.20"/>
@@ -125,12 +109,56 @@
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
   </extensions>
   <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@variables/@children.26"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@variables/@children.27"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@links/@children.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:LinkExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@links/@children.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:LinkExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@links/@children.2"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:LinkExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@links/@children.3"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:LinkExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension" width="1385" height="1525"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@links/@children.4"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:LinkExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@links/@children.5"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:LinkExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@links/@children.6"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:LinkExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@variables/@children.28"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
+  </extensions>
+  <extensions>
     <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.0"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension" x="185" y="8"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension" x="233" y="8"/>
   </extensions>
   <extensions>
     <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.1"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension" x="147" y="55"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension" x="197" y="52"/>
   </extensions>
   <extensions>
     <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.1/@activities.0"/>
@@ -198,7 +226,7 @@
   </extensions>
   <extensions>
     <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.2"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension" x="8" y="537"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension" x="40" y="507"/>
   </extensions>
   <extensions>
     <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.2/@activities.0"/>
@@ -225,8 +253,12 @@
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
   </extensions>
   <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.2/@activities.5"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
     <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.3"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension" x="281" y="537"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension" x="324" y="507"/>
   </extensions>
   <extensions>
     <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.3/@activities.0"/>
@@ -257,7 +289,67 @@
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
   </extensions>
   <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.3/@activities.4/@activity/@activities.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.3/@activities.4/@activity/@activities.0/@copy.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.3/@activities.4/@activity/@activities.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
     <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.3/@activities.5"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.4"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension" x="605" y="1052"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.4/@activities.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.4/@activities.0/@copy.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.4/@activities.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.5"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension" x="312" y="1062"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.5/@activities.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.5/@activities.0/@copy.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.5/@activities.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.5/@activities.2"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.6"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension" x="140" y="1286"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.6/@activities.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.6/@activities.1"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
   </extensions>
 </extensionmodel:ExtensionMap>

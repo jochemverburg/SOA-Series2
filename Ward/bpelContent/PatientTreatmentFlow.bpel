@@ -61,16 +61,20 @@
         <bpel:variable name="radResponse1" messageType="rad:RadiologyRequestAppointmentResponse"/>
         <bpel:variable name="radRequest" messageType="rad:RadiologyRequestAppointmentRequest"/>
         <bpel:variable name="radAppointment" element="rad:Appointment"/>
+        <bpel:variable name="transpRequest" messageType="transp:OrderPatientTransportRequest"/>
+        <bpel:variable name="paymentRequest" messageType="rad:RadiologyMakePaymentRequest"/>
+        <bpel:variable name="storeRadReportReq" messageType="pat:StoreRadiologyReportRequest"/>
     </bpel:variables>
-	<bpel:flow name="main">
-    	<bpel:links>
+    <bpel:flow name="main"><bpel:links>
     		<bpel:link name="admission-to-patientcheck" />
 			<bpel:link name="start-to-lab" />
 			<bpel:link name="start-to-rad" />
+			<bpel:link name="rad-to-payment" />
+			<bpel:link name="rad-to-report-storage" />
+			<bpel:link name="rad-report-storage-to-validation" />
+			<bpel:link name="lab-report-storage-to-validation" />
+			
         </bpel:links>
-       
-      
-
         <bpel:receive name="receiveAdmissionOrder" partnerLink="ward" operation="OrderAdmission" portType="tns:Ward" createInstance="yes" variable="admRequest">
         	<bpel:sources>
         		<bpel:source linkName="admission-to-patientcheck"></bpel:source>
@@ -189,6 +193,9 @@
 			<bpel:targets>
 				<bpel:target linkName="start-to-lab"></bpel:target>
             </bpel:targets>
+            <bpel:sources>
+            	<bpel:source linkName="lab-report-storage-to-validation"></bpel:source>
+            </bpel:sources>
 			<bpel:receive name="ReceiveLabOrderData" partnerLink="ward" operation="EnterLabTestOrderData" portType="tns:Ward"></bpel:receive>
             <bpel:assign validate="no" name="AssignLabOrderData">
                  <bpel:copy>
@@ -199,6 +206,7 @@
             <bpel:invoke name="RequestLabResults" partnerLink="lab" operation="OrderLabTest" inputVariable="labTestReq" portType="lab:Laboratory" outputVariable="labTestID"></bpel:invoke>
             <bpel:receive name="ReceiveLabResults" partnerLink="lab" operation="SendLabReport" variable="labReport" portType="labcb:LabCallback"></bpel:receive>
             <bpel:invoke name="StoreLabReport" partnerLink="epr" operation="StoreLabReport" portType="pat:ElectronicPatientRecord" inputVariable="storeLabReportReq"></bpel:invoke>        
+        	<bpel:receive name="ReceiveViewLabReport" partnerLink="ward" portType="tns:Ward" operation="ViewLabReport"></bpel:receive>
         </bpel:sequence>
      
 
@@ -206,6 +214,11 @@
     	    <bpel:targets>
 				 <bpel:target linkName="start-to-rad"></bpel:target>
             </bpel:targets>
+            
+            <bpel:sources>
+            	<bpel:source linkName="rad-to-payment"></bpel:source>
+            	<bpel:source linkName="rad-to-report-storage"></bpel:source>
+            </bpel:sources>
             
             <bpel:receive name="ReceiveRadOrderData" partnerLink="ward" operation="EnterRadiologyOrderData" portType="tns:Ward" variable="radDataReq"></bpel:receive>
             <bpel:assign validate="no" name="AssignRadOrderData">
@@ -220,17 +233,64 @@
             <bpel:invoke name="InvokeRequestRadiologyAppointment" partnerLink="rad" operation="RequestAppointment" portType="rad:Radiology" inputVariable="radAppointment" outputVariable="radAppointment"></bpel:invoke>
            
             <bpel:if name="transportRequired">
-                <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[$radReq.TransportRequired =true]]></bpel:condition>
-                <bpel:sequence>
-                
+                <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[$radDataReq.TransportRequired]]></bpel:condition>
+         		<bpel:sequence>
+               
+                    <bpel:assign validate="no" name="AssignTransportData">
+                        <bpel:copy>
+                            <bpel:from part="TransportRequired" variable="radDataReq"></bpel:from>
+                            <bpel:to part="PatientTransportOrder" variable="transpRequest"></bpel:to>
+                        </bpel:copy>
+                    </bpel:assign>
+                    <bpel:invoke name="InvokeArrangePatientTransport" partnerLink="transp" operation="OrderPatientTransport" inputVariable="transpRequest"></bpel:invoke>
                 </bpel:sequence>
             </bpel:if>
             <bpel:receive name="ReceiveRadReport" partnerLink="rad" operation="SendRadiologyReport" variable="radReport" portType="radcb:RadiologyCallback"></bpel:receive>
     	  
     	</bpel:sequence>   
     
+        <bpel:sequence>
+        	<bpel:targets>
+        		<bpel:target linkName="rad-to-payment"></bpel:target>
+        	</bpel:targets>
+        	<bpel:assign validate="no" name="assignPaymentData">
+        		<bpel:copy>         
+        			<bpel:from variable="radReq" part="Order"></bpel:from>
+                    <bpel:to variable="paymentRequest" part="RadiologyOrderID"></bpel:to>
+                </bpel:copy>        	     
+              </bpel:assign>
+        	<bpel:invoke name="invokePayment" portType="rad:Radiology" operation="MakePayment" partnerLink="rad" inputVariable="paymentRequest"></bpel:invoke>
+       
+        </bpel:sequence>  
+      
         
+        <bpel:sequence>
+        	<bpel:targets>
+        		<bpel:target linkName="rad-to-report-storage"></bpel:target>
+        	</bpel:targets>   
+        	<bpel:sources>
+        		<bpel:source linkName="rad-report-storage-to-validation"></bpel:source>
+        	</bpel:sources>
+        	<bpel:assign validate="no" name="assignStoreRadReportData">
+        		<bpel:copy>         
+        			<bpel:from variable="radReport" part="RadiologyReport"></bpel:from>
+                    <bpel:to variable="storeRadReportReq" part="RadiologyReport"></bpel:to>
+                </bpel:copy>        	     
+              </bpel:assign>
+        	<bpel:invoke name="invokeStoreRadReport" portType="pat:ElectronicPatientRecord" operation="StoreRadiologyReport" partnerLink="epr" inputVariable="storeRadReportReq"></bpel:invoke>
+        	<bpel:receive name="ReceiveViewRadReport" partnerLink="ward" portType="tns:Ward" operation="ViewRadReport"></bpel:receive>
+        </bpel:sequence> 
+        
+        <bpel:sequence>  
+        	<bpel:targets>
+        		<bpel:target linkName="rad-report-storage-to-validation"></bpel:target>
+        		<bpel:target linkName="lab-report-storage-to-validation"></bpel:target>
+        	</bpel:targets>
+        	<bpel:receive name="ReceiveValidateReports" partnerLink="ward" portType="tns:Ward" operation="ValidateReports"></bpel:receive>
+        	<bpel:receive name="ReceiveGenerateDischargeLetter" partnerLink="ward" portType="tns:Ward" operation="GenerateDischargeLetter"></bpel:receive>
+        </bpel:sequence>
     
     </bpel:flow>
+    
 </bpel:process>
 
