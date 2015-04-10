@@ -65,7 +65,8 @@
         <bpel:variable name="paymentRequest" messageType="rad:RadiologyMakePaymentRequest"/>
         <bpel:variable name="storeRadReportReq" messageType="pat:StoreRadiologyReportRequest"/>
     </bpel:variables>
-    <bpel:flow name="main"><bpel:links>
+    <bpel:flow name="main">
+    	<bpel:links>
     		<bpel:link name="admission-to-patientcheck" />
 			<bpel:link name="start-to-lab" />
 			<bpel:link name="start-to-rad" />
@@ -73,7 +74,6 @@
 			<bpel:link name="rad-to-report-storage" />
 			<bpel:link name="rad-report-storage-to-validation" />
 			<bpel:link name="lab-report-storage-to-validation" />
-			
         </bpel:links>
         <bpel:receive name="receiveAdmissionOrder" partnerLink="ward" operation="OrderAdmission" portType="tns:Ward" createInstance="yes" variable="admRequest">
         	<bpel:sources>
@@ -196,6 +196,8 @@
             <bpel:sources>
             	<bpel:source linkName="lab-report-storage-to-validation"></bpel:source>
             </bpel:sources>
+            <!-- [UndeclaredVariable] Attempt to reference undeclared variable "null". 
+            Cannot use non-message variable "labTestID" in this context (message variable is required).-->
 			<bpel:receive name="ReceiveLabOrderData" partnerLink="ward" operation="EnterLabTestOrderData" portType="tns:Ward"></bpel:receive>
             <bpel:assign validate="no" name="AssignLabOrderData">
                  <bpel:copy>
@@ -205,6 +207,9 @@
             </bpel:assign>
             <bpel:invoke name="RequestLabResults" partnerLink="lab" operation="OrderLabTest" inputVariable="labTestReq" portType="lab:Laboratory" outputVariable="labTestID"></bpel:invoke>
             <bpel:receive name="ReceiveLabResults" partnerLink="lab" operation="SendLabReport" variable="labReport" portType="labcb:LabCallback"></bpel:receive>
+            <!-- [UndeclaredVariable] Attempt to reference undeclared variable "null". 
+            Cannot use non-message variable "radReportID" in this context (message variable is required).
+	null:233: error: [MessageVariableRequired] Cannot use non-message variable "radAppointment" in this context (message variable is required)-->
             <bpel:invoke name="StoreLabReport" partnerLink="epr" operation="StoreLabReport" portType="pat:ElectronicPatientRecord" inputVariable="storeLabReportReq"></bpel:invoke>        
         	<bpel:receive name="ReceiveViewLabReport" partnerLink="ward" portType="tns:Ward" operation="ViewLabReport"></bpel:receive>
         </bpel:sequence>
@@ -272,12 +277,15 @@
         		<bpel:source linkName="rad-report-storage-to-validation"></bpel:source>
         	</bpel:sources>
         	<bpel:assign validate="no" name="assignStoreRadReportData">
-        		<bpel:copy>         
+        		<bpel:copy>   
+        		      
         			<bpel:from variable="radReport" part="RadiologyReport"></bpel:from>
                     <bpel:to variable="storeRadReportReq" part="RadiologyReport"></bpel:to>
                 </bpel:copy>        	     
               </bpel:assign>
         	<bpel:invoke name="invokeStoreRadReport" portType="pat:ElectronicPatientRecord" operation="StoreRadiologyReport" partnerLink="epr" inputVariable="storeRadReportReq"></bpel:invoke>
+        	
+        	<!-- [UndeclaredVariable] Attempt to reference undeclared variable "null". -->
         	<bpel:receive name="ReceiveViewRadReport" partnerLink="ward" portType="tns:Ward" operation="ViewRadReport"></bpel:receive>
         </bpel:sequence> 
         
@@ -286,7 +294,9 @@
         		<bpel:target linkName="rad-report-storage-to-validation"></bpel:target>
         		<bpel:target linkName="lab-report-storage-to-validation"></bpel:target>
         	</bpel:targets>
+        	<!-- [UndeclaredVariable] Attempt to reference undeclared variable "null". -->
         	<bpel:receive name="ReceiveValidateReports" partnerLink="ward" portType="tns:Ward" operation="ValidateReports"></bpel:receive>
+        	<!-- [UndeclaredVariable] Attempt to reference undeclared variable "null". -->
         	<bpel:receive name="ReceiveGenerateDischargeLetter" partnerLink="ward" portType="tns:Ward" operation="GenerateDischargeLetter"></bpel:receive>
         </bpel:sequence>
     
