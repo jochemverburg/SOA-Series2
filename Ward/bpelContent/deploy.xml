@@ -8,10 +8,10 @@
       <service name="WardService:WardService" port="WardPort"/>
     </provide>
     <provide partnerLink="lab">
-      <service name="LabService:LabService" port="LabPort"/>
+      <service name="LabCallbackService:LabCallbackService" port="LabCallbackPort"/>
     </provide>
     <provide partnerLink="rad">
-      <service name="RadiologyService:RadiologyService" port="RadiologyPort"/>
+      <service name="RadiologyCallbackService:RadiologyCallbackService" port="RadiologyCallbackPort"/>
     </provide>
     <invoke partnerLink="lab">
       <service name="LabService:LabService" port="LabPort"/>

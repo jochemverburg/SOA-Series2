@@ -56,170 +56,184 @@
         <bpel:variable name="radReq" messageType="rad:RadiologyOrderRadExaminationRequest"/>
         <bpel:variable name="radReport" messageType="radcb:RadiologyReportRequest"/>
         <bpel:variable name="radResponse" messageType="rad:RadiologyOrderRadExaminationResponse"/>
-        <bpel:variable name="labTestID" element="lab:LabOrderId"/>
-        <bpel:variable name="radReportID" element="rad:RadiologyOrderID"/>
-        <bpel:variable name="radResponse1" messageType="rad:RadiologyRequestAppointmentResponse"/>
-        <bpel:variable name="radRequest" messageType="rad:RadiologyRequestAppointmentRequest"/>
-        <bpel:variable name="radAppointment" element="rad:Appointment"/>
+        <bpel:variable name="radAppointmentResponse" messageType="rad:RadiologyRequestAppointmentResponse"/>
+        <bpel:variable name="radAppointmentRequest" messageType="rad:RadiologyRequestAppointmentRequest"/>    
         <bpel:variable name="transpRequest" messageType="transp:OrderPatientTransportRequest"/>
         <bpel:variable name="paymentRequest" messageType="rad:RadiologyMakePaymentRequest"/>
         <bpel:variable name="storeRadReportReq" messageType="pat:StoreRadiologyReportRequest"/>
+        <bpel:variable name="generateDischargeLetterRequest" messageType="tns:GenerateDischargeLetterRequest"/>
+        <bpel:variable name="validateReportsRequest" messageType="tns:ValidateReportsRequest"/>
+        <bpel:variable name="viewRadReportRequest" messageType="tns:ViewRadiologyReportRequest"/>
+        <bpel:variable name="viewLabReportRequest" messageType="tns:ViewLabReportRequest"/>
     </bpel:variables>
-    <bpel:flow name="main">
-    	<bpel:links>
-    		<bpel:link name="admission-to-patientcheck" />
-			<bpel:link name="start-to-lab" />
-			<bpel:link name="start-to-rad" />
-			<bpel:link name="rad-to-payment" />
-			<bpel:link name="rad-to-report-storage" />
-			<bpel:link name="rad-report-storage-to-validation" />
-			<bpel:link name="lab-report-storage-to-validation" />
-        </bpel:links>
-        <bpel:receive name="receiveAdmissionOrder" partnerLink="ward" operation="OrderAdmission" portType="tns:Ward" createInstance="yes" variable="admRequest">
-        	<bpel:sources>
-        		<bpel:source linkName="admission-to-patientcheck"></bpel:source>
-        	</bpel:sources>
-        </bpel:receive>
-        
-       <bpel:sequence>
-       <bpel:targets>
-       		<bpel:target linkName="admission-to-patientcheck"></bpel:target>
-       </bpel:targets>
-        <bpel:sources>
-	        	<bpel:source linkName="start-to-lab"></bpel:source>
-	        	<bpel:source linkName="start-to-rad"></bpel:source>
-	        </bpel:sources> 
-        <bpel:assign validate="no" name="assignName">
-           
-            <bpel:copy>
-                <bpel:from><bpel:literal><s0:PatientName xmlns:s0="http://www.PAHospital.org/PatService/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">s0:PatientName</s0:PatientName>
-				</bpel:literal></bpel:from>
-                <bpel:to variable="eprReq" part="PatientName"></bpel:to>
-            </bpel:copy>
-            <bpel:copy>
-                <bpel:from part="PatientData" variable="admRequest">
-                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientName]]></bpel:query>
-                </bpel:from>
-                <bpel:to part="PatientName" variable="eprReq"></bpel:to>
-            </bpel:copy>
-        </bpel:assign>
-        
-        <bpel:invoke name="getIDsByName" partnerLink="epr" operation="GetPatientIDsByName" portType="pat:ElectronicPatientRecord" inputVariable="eprReq" outputVariable="eprResp"></bpel:invoke>
-                
-        
-        
-        
-        <bpel:if name="CheckIfExists">
-            <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[$admResp.PatientID]]></bpel:condition>
-            <bpel:sequence>
-                <bpel:assign validate="no" name="AssignIDAndData">
-                    <bpel:copy>
-                        <bpel:from><bpel:literal><s0:Patient xmlns:s0="http://www.PAHospital.org/PatService/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-						  <PatientID>PatientID</PatientID>
-						  <PatientName>PatientName</PatientName>
-						  <PatientStreet>PatientStreet</PatientStreet>
-						  <PatientZipCode>0</PatientZipCode>
-						  <PatientCity>PatientCity</PatientCity>
-						  <PatientBirthday>2001-01-01</PatientBirthday>
-						</s0:Patient>
-						</bpel:literal></bpel:from>
-                        <bpel:to variable="createEPRReq" part="Patient"></bpel:to>
-                    </bpel:copy>
-                    <bpel:copy>
-                        <bpel:from expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
-                            <![CDATA[$admRequest.PatientData[PatientName]+"1"]]>
-                        </bpel:from>
-                        <bpel:to part="Patient" variable="createEPRReq">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
-                                <![CDATA[PatientID]]>
-                            </bpel:query>
-                        </bpel:to>
-                    </bpel:copy>
-                    <bpel:copy>
-                        <bpel:from part="PatientData" variable="admRequest">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientName]]></bpel:query>
-                        </bpel:from>
-                        <bpel:to part="Patient" variable="createEPRReq">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientName]]></bpel:query>
-                        </bpel:to>
-                    </bpel:copy>
-                    <bpel:copy>
-                        <bpel:from part="PatientData" variable="admRequest">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientStreet]]></bpel:query>
-                        </bpel:from>
-                        <bpel:to part="Patient" variable="createEPRReq">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientStreet]]></bpel:query>
-                        </bpel:to>
-                    </bpel:copy>
-                    <bpel:copy>
-                        <bpel:from part="PatientData" variable="admRequest">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientZipCode]]></bpel:query>
-                        </bpel:from>
-                        <bpel:to part="Patient" variable="createEPRReq">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientZipCode]]></bpel:query>
-                        </bpel:to>
-                    </bpel:copy>
-                    <bpel:copy>
-                        <bpel:from part="PatientData" variable="admRequest">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientCity]]></bpel:query>
-                        </bpel:from>
-                        <bpel:to part="Patient" variable="createEPRReq">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientCity]]></bpel:query>
-                        </bpel:to>
-                    </bpel:copy>
-                    <bpel:copy>
-                        <bpel:from part="PatientData" variable="admRequest">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
-                                <![CDATA[PatientBirthday]]>
-                            </bpel:query>
-                        </bpel:from>
-                        <bpel:to part="Patient" variable="createEPRReq">
-                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientBirthday]]></bpel:query>
-                        </bpel:to>
-                    </bpel:copy>
-                </bpel:assign>
-                <bpel:invoke name="MakeRecord" partnerLink="epr" operation="CreatePatientRecord" portType="pat:ElectronicPatientRecord" inputVariable="createEPRReq" outputVariable="createEPRResp"></bpel:invoke>
-                
-                </bpel:sequence> 
-           
-        </bpel:if>
-        
+
+
+    <bpel:sequence name="main">
+        <bpel:receive name="receiveAdmissionOrder" partnerLink="ward" operation="OrderAdmission" portType="tns:Ward" createInstance="yes" variable="admRequest"></bpel:receive>
+        <bpel:sequence>
+	        <bpel:assign validate="no" name="assignName">          
+	            <bpel:copy>
+	                <bpel:from><bpel:literal><s0:PatientName xmlns:s0="http://www.PAHospital.org/PatService/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">s0:PatientName</s0:PatientName>
+					</bpel:literal></bpel:from>
+	                <bpel:to variable="eprReq" part="PatientName"></bpel:to>
+	            </bpel:copy>
+	            <bpel:copy>
+	                <bpel:from part="PatientData" variable="admRequest">
+	                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientName]]></bpel:query>
+	                </bpel:from>
+	                <bpel:to part="PatientName" variable="eprReq"></bpel:to>
+	            </bpel:copy>
+	        </bpel:assign>	        
+	        <bpel:invoke name="getIDsByName" partnerLink="epr" operation="GetPatientIDsByName" portType="pat:ElectronicPatientRecord" inputVariable="eprReq" outputVariable="eprResp"></bpel:invoke>    
+	        <bpel:if name="CheckIfExists">
+	            <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[$admRequest.PatientData[PatientID]=""]]></bpel:condition>
+	            <bpel:sequence>
+	                <bpel:assign validate="no" name="AssignIDAndData">
+	                    <bpel:copy>
+	                        <bpel:from><bpel:literal><s0:Patient xmlns:s0="http://www.PAHospital.org/PatService/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+							  <PatientID>PatientID</PatientID>
+							  <PatientName>PatientName</PatientName>
+							  <PatientStreet>PatientStreet</PatientStreet>
+							  <PatientZipCode>0</PatientZipCode>
+							  <PatientCity>PatientCity</PatientCity>
+							  <PatientBirthday>2001-01-01</PatientBirthday>
+							</s0:Patient>
+							</bpel:literal></bpel:from>
+	                        <bpel:to variable="createEPRReq" part="Patient"></bpel:to>
+	                    </bpel:copy>
+	                    <bpel:copy>
+	                        <bpel:from expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+	                            <![CDATA[$admRequest.PatientData[PatientID]+1]]>
+	                        </bpel:from>
+	                        <bpel:to part="Patient" variable="createEPRReq">
+	                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+	                                <![CDATA[PatientID]]>
+	                            </bpel:query>
+	                        </bpel:to>
+	                    </bpel:copy>
+	                    <!-- Copy the new id back in the request, to return later -->
+	                     <bpel:copy>
+	                        <bpel:from part="Patient" variable="createEPRReq">PatientID</bpel:from>
+	                        <bpel:to variable="admRequest" part="PatientData">PatientID</bpel:to>
+	                    </bpel:copy>
+	                    <bpel:copy>
+	                        <bpel:from part="PatientData" variable="admRequest">
+	                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientName]]></bpel:query>
+	                        </bpel:from>
+	                        <bpel:to part="Patient" variable="createEPRReq">
+	                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientName]]></bpel:query>
+	                        </bpel:to>
+	                    </bpel:copy>
+	                    <bpel:copy>
+	                        <bpel:from part="PatientData" variable="admRequest">
+	                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientStreet]]></bpel:query>
+	                        </bpel:from>
+	                        <bpel:to part="Patient" variable="createEPRReq">
+	                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientStreet]]></bpel:query>
+	                        </bpel:to>
+	                    </bpel:copy>
+	                    <bpel:copy>
+	                        <bpel:from part="PatientData" variable="admRequest">
+	                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientZipCode]]></bpel:query>
+	                        </bpel:from>
+	                        <bpel:to part="Patient" variable="createEPRReq">
+	                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientZipCode]]></bpel:query>
+	                        </bpel:to>
+	                    </bpel:copy>
+	                    <bpel:copy>
+	                        <bpel:from part="PatientData" variable="admRequest">
+	                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientCity]]></bpel:query>
+	                        </bpel:from>
+	                        <bpel:to part="Patient" variable="createEPRReq">
+	                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientCity]]></bpel:query>
+	                        </bpel:to>
+	                    </bpel:copy>
+	                    <bpel:copy>
+	                        <bpel:from part="PatientData" variable="admRequest">
+	                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+	                                <![CDATA[PatientBirthday]]>
+	                            </bpel:query>
+	                        </bpel:from>
+	                        <bpel:to part="Patient" variable="createEPRReq">
+	                            <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[PatientBirthday]]></bpel:query>
+	                        </bpel:to>
+	                    </bpel:copy>
+	                </bpel:assign>
+	                <bpel:invoke name="MakeRecord" partnerLink="epr" operation="CreatePatientRecord" portType="pat:ElectronicPatientRecord" inputVariable="createEPRReq" outputVariable="createEPRResp"></bpel:invoke>	                
+	                </bpel:sequence> 	           
+	        </bpel:if> 
+	    <bpel:assign>
+	    	<bpel:copy>
+	           <bpel:from variable="admRequest" part="PatientData">PatientID</bpel:from>
+	           <bpel:to variable="admResp" part="PatientID">ID</bpel:to>
+	        </bpel:copy>
+	   	</bpel:assign>       
         <bpel:reply name="ReplyAdmissionOrder" partnerLink="ward" operation="OrderAdmission" portType="tns:Ward" variable="admResp">
 	      
         </bpel:reply>
        </bpel:sequence>
-     
-       <bpel:sequence name="Sequence">       
-			<bpel:targets>
-				<bpel:target linkName="start-to-lab"></bpel:target>
-            </bpel:targets>
-            <bpel:sources>
-            	<bpel:source linkName="lab-report-storage-to-validation"></bpel:source>
-            </bpel:sources>
-            <!-- [UndeclaredVariable] Attempt to reference undeclared variable "null". 
-            Cannot use non-message variable "labTestID" in this context (message variable is required).-->
-			<bpel:receive name="ReceiveLabOrderData" partnerLink="ward" operation="EnterLabTestOrderData" portType="tns:Ward"></bpel:receive>
-            <bpel:assign validate="no" name="AssignLabOrderData">
-                 <bpel:copy>
-                    <bpel:from part="LabTestData" variable="labDataReq"></bpel:from>
-                    <bpel:to part="LabOrder" variable="labTestReq"></bpel:to>
-                </bpel:copy>
-            </bpel:assign>
-            <bpel:invoke name="RequestLabResults" partnerLink="lab" operation="OrderLabTest" inputVariable="labTestReq" portType="lab:Laboratory" outputVariable="labTestID"></bpel:invoke>
-            <bpel:receive name="ReceiveLabResults" partnerLink="lab" operation="SendLabReport" variable="labReport" portType="labcb:LabCallback"></bpel:receive>
-            <!-- [UndeclaredVariable] Attempt to reference undeclared variable "null". 
-            Cannot use non-message variable "radReportID" in this context (message variable is required).
-	null:233: error: [MessageVariableRequired] Cannot use non-message variable "radAppointment" in this context (message variable is required)-->
-            <bpel:invoke name="StoreLabReport" partnerLink="epr" operation="StoreLabReport" portType="pat:ElectronicPatientRecord" inputVariable="storeLabReportReq"></bpel:invoke>        
-        	<bpel:receive name="ReceiveViewLabReport" partnerLink="ward" portType="tns:Ward" operation="ViewLabReport"></bpel:receive>
+       <bpel:flow>
+       <bpel:links>
+			<bpel:link name="rad-to-payment" />
+			<bpel:link name="rad-to-report-storage" />
+			<bpel:link name="rad-report-storage-to-validation" />
+			<bpel:link name="lab-report-storage-to-validation"/>
+        </bpel:links>
+       <bpel:sequence>
+       <bpel:sources>
+       	<bpel:source linkName="lab-report-storage-to-validation"></bpel:source>
+       </bpel:sources>
+         <bpel:receive name="ReceiveLabOrderData" partnerLink="ward" operation="EnterLabTestOrderData" portType="tns:Ward" variable="labDataReq"></bpel:receive>
+	<bpel:assign validate="no" name="initializeLabOrderData">
+               <bpel:copy>
+                  <bpel:from>
+                  <bpel:literal>
+                  <s0:Patient xmlns:s0="http://www.PAHospital.org/PatService/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			           <PatientID>1</PatientID>
+			           <CaseID>1</CaseID>
+			           <SampleID>1</SampleID>
+			           <SampleMaterial>BLOOD</SampleMaterial>
+			           <LabParameter>1</LabParameter>                  
+                  </s0:Patient>
+                  </bpel:literal>
+                  </bpel:from>
+                  <bpel:to part="LabOrder" variable="labTestReq"></bpel:to>
+              </bpel:copy>
+          </bpel:assign>
+          <bpel:assign validate="no" name="AssignLabOrderData">
+               <bpel:copy>
+                  <bpel:from part="LabTestData" variable="labDataReq"></bpel:from>
+                  <bpel:to part="LabOrder" variable="labTestReq"></bpel:to>
+              </bpel:copy>
+          </bpel:assign>
+          <bpel:invoke name="RequestLabResults" partnerLink="lab" operation="OrderLabTest" inputVariable="labTestReq" portType="lab:Laboratory" outputVariable="labTestRes"></bpel:invoke>
+          <bpel:receive name="ReceiveLabResults" partnerLink="lab" operation="SendLabReport" variable="labReport" portType="labcb:LabCallback"></bpel:receive>
+          <bpel:assign name="initializeStoreRLabReportReq">
+          	<bpel:copy>
+          		<bpel:from>
+          			<bpel:literal >
+          				<l0:LabReport xmlns:l0="http://www.PAHospital.org/PatService/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+				       <LabOrderID>1</LabOrderID>
+				            <PatientID>1</PatientID>
+				            <SampleID>1</SampleID>
+				            <LabValues>
+				              <LabValue>
+				                  <LabParameter>a</LabParameter>
+				                  <LabValue>0.1</LabValue>
+				               </LabValue>
+				            </LabValues>
+				     	</l0:LabReport>
+          			</bpel:literal>
+          		</bpel:from>
+          		<bpel:to part="LabReport" variable="storeLabReportReq"></bpel:to>
+          	</bpel:copy>
+          </bpel:assign>
+          <bpel:invoke name="StoreLabReport" partnerLink="epr" operation="StoreLabReport" portType="pat:ElectronicPatientRecord" inputVariable="storeLabReportReq"></bpel:invoke>        
+      	<bpel:receive name="ReceiveViewLabReport" partnerLink="ward" portType="tns:Ward" operation="ViewLabReport" variable="viewLabReportRequest"></bpel:receive>
         </bpel:sequence>
      
 
-    	<bpel:sequence>
-    	    <bpel:targets>
-				 <bpel:target linkName="start-to-rad"></bpel:target>
-            </bpel:targets>
-            
+    	<bpel:sequence>           
             <bpel:sources>
             	<bpel:source linkName="rad-to-payment"></bpel:source>
             	<bpel:source linkName="rad-to-report-storage"></bpel:source>
@@ -228,32 +242,47 @@
             <bpel:receive name="ReceiveRadOrderData" partnerLink="ward" operation="EnterRadiologyOrderData" portType="tns:Ward" variable="radDataReq"></bpel:receive>
             <bpel:assign validate="no" name="AssignRadOrderData">
                  <bpel:copy>
-                    <bpel:from part="RadOrderData" variable="radDataReq"></bpel:from>
-                    <bpel:to part="Order" variable="radReq"></bpel:to>
+                    <bpel:from>$radDataReq.RadOrderData[PatientID]</bpel:from>
+                    <bpel:to>$radReq.Order</bpel:to>
+                </bpel:copy>
+                 <bpel:copy>
+                    <bpel:from>$radDataReq.RadOrderData[CaseID]</bpel:from>
+                    <bpel:to>$radReq.Order</bpel:to>
+                </bpel:copy>
+                 <bpel:copy>
+                    <bpel:from>$radDataReq.RadOrderData[ExaminationType]</bpel:from>
+                    <bpel:to>$radReq.Order</bpel:to>
                 </bpel:copy>
             </bpel:assign>
-            <bpel:invoke name="RequestRadReport" partnerLink="rad" operation="OrderRadiologyExamination" inputVariable="radReq" outputVariable="radReportID"></bpel:invoke>
-            
-            
-            <bpel:invoke name="InvokeRequestRadiologyAppointment" partnerLink="rad" operation="RequestAppointment" portType="rad:Radiology" inputVariable="radAppointment" outputVariable="radAppointment"></bpel:invoke>
-           
+            <bpel:invoke name="RequestRadReport" partnerLink="rad" operation="OrderRadiologyExamination" inputVariable="radReq" outputVariable="radResponse"></bpel:invoke>                        
+            <bpel:invoke name="InvokeRequestRadiologyAppointment" partnerLink="rad" operation="RequestAppointment" portType="rad:Radiology" inputVariable="radAppointmentRequest" outputVariable="radAppointmentResponse"></bpel:invoke>          
             <bpel:if name="transportRequired">
-                <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[$radDataReq.TransportRequired]]></bpel:condition>
+                <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[$radDataReq.RadOrderData[TransportRequired]]]></bpel:condition>
          		<bpel:sequence>
                
                     <bpel:assign validate="no" name="AssignTransportData">
                         <bpel:copy>
-                            <bpel:from part="TransportRequired" variable="radDataReq"></bpel:from>
-                            <bpel:to part="PatientTransportOrder" variable="transpRequest"></bpel:to>
+                            <bpel:from>$radDataReq.RadOrderData[PatientID]</bpel:from>
+                            <bpel:to>$transpRequest.PatientTransportOrder</bpel:to>
+                        </bpel:copy>
+                         <bpel:copy>
+                            <bpel:from><bpel:literal>Radiology</bpel:literal></bpel:from>
+                            <bpel:to part="PatientTransportOrder" variable="transpRequest">RequestingUnit</bpel:to>
+                        </bpel:copy>
+                         <bpel:copy>
+                            <bpel:from><bpel:literal>Radiology</bpel:literal></bpel:from>
+                            <bpel:to part="PatientTransportOrder" variable="transpRequest">DestinationUnit</bpel:to>
+                        </bpel:copy>         
+                        <bpel:copy>
+                            <bpel:from>$radAppointmentResponse.RadiologyAppointmentResponse[Date]</bpel:from>
+                            <bpel:to part="PatientTransportOrder" variable="transpRequest">TransportationDate</bpel:to>
                         </bpel:copy>
                     </bpel:assign>
                     <bpel:invoke name="InvokeArrangePatientTransport" partnerLink="transp" operation="OrderPatientTransport" inputVariable="transpRequest"></bpel:invoke>
                 </bpel:sequence>
             </bpel:if>
-            <bpel:receive name="ReceiveRadReport" partnerLink="rad" operation="SendRadiologyReport" variable="radReport" portType="radcb:RadiologyCallback"></bpel:receive>
-    	  
-    	</bpel:sequence>   
-    
+            <bpel:receive name="ReceiveRadReport" partnerLink="rad" operation="SendRadiologyReport" variable="radReport" portType="radcb:RadiologyCallback"></bpel:receive>    	  
+    	</bpel:sequence>       
         <bpel:sequence>
         	<bpel:targets>
         		<bpel:target linkName="rad-to-payment"></bpel:target>
@@ -264,11 +293,8 @@
                     <bpel:to variable="paymentRequest" part="RadiologyOrderID"></bpel:to>
                 </bpel:copy>        	     
               </bpel:assign>
-        	<bpel:invoke name="invokePayment" portType="rad:Radiology" operation="MakePayment" partnerLink="rad" inputVariable="paymentRequest"></bpel:invoke>
-       
-        </bpel:sequence>  
-      
-        
+        	<bpel:invoke name="invokePayment" portType="rad:Radiology" operation="MakePayment" partnerLink="rad" inputVariable="paymentRequest"></bpel:invoke>       
+        </bpel:sequence>         
         <bpel:sequence>
         	<bpel:targets>
         		<bpel:target linkName="rad-to-report-storage"></bpel:target>
@@ -283,24 +309,18 @@
                     <bpel:to variable="storeRadReportReq" part="RadiologyReport"></bpel:to>
                 </bpel:copy>        	     
               </bpel:assign>
-        	<bpel:invoke name="invokeStoreRadReport" portType="pat:ElectronicPatientRecord" operation="StoreRadiologyReport" partnerLink="epr" inputVariable="storeRadReportReq"></bpel:invoke>
-        	
-        	<!-- [UndeclaredVariable] Attempt to reference undeclared variable "null". -->
-        	<bpel:receive name="ReceiveViewRadReport" partnerLink="ward" portType="tns:Ward" operation="ViewRadReport"></bpel:receive>
-        </bpel:sequence> 
-        
+        	<bpel:invoke name="invokeStoreRadReport" portType="pat:ElectronicPatientRecord" operation="StoreRadiologyReport" partnerLink="epr" inputVariable="storeRadReportReq"></bpel:invoke>        	
+        	<bpel:receive name="ReceiveViewRadReport" partnerLink="ward" portType="tns:Ward" operation="ViewRadReport" variable="viewRadReportRequest"></bpel:receive>
+        </bpel:sequence>         
         <bpel:sequence>  
         	<bpel:targets>
         		<bpel:target linkName="rad-report-storage-to-validation"></bpel:target>
         		<bpel:target linkName="lab-report-storage-to-validation"></bpel:target>
         	</bpel:targets>
-        	<!-- [UndeclaredVariable] Attempt to reference undeclared variable "null". -->
-        	<bpel:receive name="ReceiveValidateReports" partnerLink="ward" portType="tns:Ward" operation="ValidateReports"></bpel:receive>
-        	<!-- [UndeclaredVariable] Attempt to reference undeclared variable "null". -->
-        	<bpel:receive name="ReceiveGenerateDischargeLetter" partnerLink="ward" portType="tns:Ward" operation="GenerateDischargeLetter"></bpel:receive>
+        	<bpel:receive name="ReceiveValidateReports" partnerLink="ward" portType="tns:Ward" operation="ValidateReports" variable="validateReportsRequest"></bpel:receive>
+        	<bpel:receive name="ReceiveGenerateDischargeLetter" partnerLink="ward" portType="tns:Ward" operation="GenerateDischargeLetter" variable="generateDischargeLetterRequest"></bpel:receive>
         </bpel:sequence>
-    
-    </bpel:flow>
-    
+		</bpel:flow>  
+    </bpel:sequence>
 </bpel:process>
 
