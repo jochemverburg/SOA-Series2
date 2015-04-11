@@ -24,6 +24,23 @@
 <types>
 	<xsd:schema targetNamespace="http://www.PAHospital.org/WardService/">
 		<xsd:element name="ID" type="xsd:string"></xsd:element>
+		<xsd:element name="RadiologyData">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="PatientID" type="xsd:string" />
+            <xsd:element name="CaseID" type="xsd:string" />
+      		<xsd:element name="TransportRequired" type="xsd:boolean"/>
+            <xsd:element name="ExaminationType">
+              <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                  <xsd:enumeration value="XRAY" />
+                  <xsd:enumeration value="CT" />
+                </xsd:restriction>
+              </xsd:simpleType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
 	</xsd:schema>
 
 </types>
@@ -39,8 +56,7 @@
     <part name="LabTestData" element="lab:LabOrder" />
   </message>
   <message name="EnterRadiologyOrderDataRequest">
-    <part name="RadOrderData" element="rad:RadiologyOrder" />
-    <part name="TransportRequired" element="transp:PatientOrder"/>
+    <part name="RadOrderData" element="tns:RadiologyData" />
   </message>
   <message name="ViewLabReportRequest">
     <part name="PatientID" element="tns:ID" />
