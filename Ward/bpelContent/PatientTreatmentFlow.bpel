@@ -104,6 +104,7 @@
 							</bpel:literal></bpel:from>
 	                        <bpel:to variable="createEPRReq" part="Patient"></bpel:to>
 	                    </bpel:copy>
+	                    <!-- Moet hier niet ook een query zijn -->
 	                    <bpel:copy>
 	                        <bpel:from expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
 	                            <![CDATA[$admRequest.PatientData[PatientID]+1]]>
@@ -114,7 +115,8 @@
 	                            </bpel:query>
 	                        </bpel:to>
 	                    </bpel:copy>
-	                    <!-- Copy the new id back in the request, to return later -->
+	                    <!-- Copy the new id back in the request, to return later 
+	                    Is dit deel niet verkeerd om? En moet dit niet een query zijn?-->
 	                     <bpel:copy>
 	                        <bpel:from part="Patient" variable="createEPRReq">PatientID</bpel:from>
 	                        <bpel:to variable="admRequest" part="PatientData">PatientID</bpel:to>
