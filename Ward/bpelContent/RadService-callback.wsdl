@@ -24,7 +24,7 @@
 <vprop:property name="RadiologyOrderID" type="xsd:string"/>
 <vprop:property name="PatientID" type="xsd:string"/>
 
-<vprop:propertyAlias propertyName="s0:RadOrderID" messageType="s0:RadiologyReportRequest" part="RadiologyReport" element="RadiologyOrderID"></vprop:propertyAlias>
+<vprop:propertyAlias propertyName="s0:RadiologyOrderID" messageType="s0:RadiologyReportRequest" part="RadiologyReport" element="RadiologyOrderID"></vprop:propertyAlias>
 <vprop:propertyAlias propertyName="s0:PatientID" messageType="s0:RadiologyReportRequest" part="RadiologyReport" element="PatientID"></vprop:propertyAlias>
 
 
