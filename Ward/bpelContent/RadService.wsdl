@@ -3,6 +3,7 @@
   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
   xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:s0="http://www.PAHospital.org/RadiologyService/"
+  xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop"
   targetNamespace="http://www.PAHospital.org/RadiologyService/">
 
   <types>
@@ -53,6 +54,13 @@
       </xsd:element>
     </xsd:schema>
   </types>
+
+<vprop:property name="RadiologyOrderID" type="xsd:string"/>
+<vprop:property name="PatientID" type="xsd:string"/>
+
+<vprop:propertyAlias propertyName="s0:RadiologyOrderID" messageType="s0:RadiologyOrderRadExaminationResponse" part="RadiologyOrderID" element="RadiologyOrderID"></vprop:propertyAlias>
+<vprop:propertyAlias propertyName="s0:PatientID" messageType="s0:RadiologyOrderRadExaminationRequest" part="Order" element="PatientID"></vprop:propertyAlias>
+
 
   <message name="RadiologyOrderRadExaminationRequest">
     <part name="Order" element="s0:RadiologyOrder" />

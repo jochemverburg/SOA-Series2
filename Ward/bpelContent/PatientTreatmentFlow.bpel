@@ -66,7 +66,11 @@
         <bpel:variable name="viewRadReportRequest" messageType="tns:ViewRadiologyReportRequest"/>
         <bpel:variable name="viewLabReportRequest" messageType="tns:ViewLabReportRequest"/>
     </bpel:variables>
-
+	<bpel:correlationSets>
+		<bpel:correlationSet name="labCorr" properties="lab:LabOrderId labcb:LabOrderID"></bpel:correlationSet>
+		<bpel:correlationSet name="radCorr" properties="rad:RadiologyOrderID radcb:RadiologyOrderID"></bpel:correlationSet>
+	
+	</bpel:correlationSets>
 
     <bpel:sequence name="main">
         <bpel:receive name="receiveAdmissionOrder" partnerLink="ward" operation="OrderAdmission" portType="tns:Ward" createInstance="yes" variable="admRequest"></bpel:receive>
