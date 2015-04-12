@@ -67,9 +67,8 @@
         <bpel:variable name="viewLabReportRequest" messageType="tns:ViewLabReportRequest"/>
     </bpel:variables>
 	<bpel:correlationSets>
-		<bpel:correlationSet name="labCorr" properties="lab:LabOrderId labcb:LabOrderID"></bpel:correlationSet>
-		<bpel:correlationSet name="radCorr" properties="rad:RadiologyOrderID radcb:RadiologyOrderID"></bpel:correlationSet>
-	
+		<bpel:correlationSet name="labCorr" properties="lab:LabOrderID labcb:LabOrderID"/>
+		<bpel:correlationSet name="radCorr" properties="rad:RadiologyOrderID radcb:RadiologyOrderID"/>
 	</bpel:correlationSets>
 
     <bpel:sequence name="main">

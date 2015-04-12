@@ -21,7 +21,7 @@
     </xsd:schema>
   </types>
 
-<vprop:property name="RadOrderID" type="xsd:string"/>
+<vprop:property name="RadiologyOrderID" type="xsd:string"/>
 <vprop:property name="PatientID" type="xsd:string"/>
 
 <vprop:propertyAlias propertyName="s0:RadOrderID" messageType="s0:RadiologyReportRequest" part="RadiologyReport" element="RadiologyOrderID"></vprop:propertyAlias>
