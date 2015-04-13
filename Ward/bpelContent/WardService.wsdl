@@ -49,7 +49,7 @@
 <vprop:property name="PatientID" type="xsd:string"/>
 
 <vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:OrderAdmissionResponse" part="PatientID" element="ID"></vprop:propertyAlias>
-<vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:EnterLabTestOrderDataRequest" part="LabTestData" element="LabOrder"><query>lab:PatientID</query></vprop:propertyAlias>
+<vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:EnterLabTestOrderDataRequest" part="LabTestData" element="LabOrder"><vprop:query>PatientID</vprop:query></vprop:propertyAlias>
 <vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:EnterRadiologyOrderDataRequest" part="RadOrderData" element="PatientID"></vprop:propertyAlias>
 
   <message name="OrderAdmissionRequest">
