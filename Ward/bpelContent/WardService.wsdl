@@ -51,6 +51,11 @@
 <vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:OrderAdmissionResponse" part="PatientID" element="ID"></vprop:propertyAlias>
 <vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:EnterLabTestOrderDataRequest" part="LabTestData" element="LabOrder"><vprop:query>PatientID</vprop:query></vprop:propertyAlias>
 <vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:EnterRadiologyOrderDataRequest" part="RadOrderData" element="PatientID"></vprop:propertyAlias>
+<vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:ViewLabReportRequest" part="PatientID" element="ID"></vprop:propertyAlias>
+<vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:ViewRadiologyReportRequest" part="PatientID" element="ID"></vprop:propertyAlias>
+<vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:ValidateReportsRequest" part="PatientID" element="ID"></vprop:propertyAlias>
+<vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:GenerateDischargeLetterRequest" part="PatientID" element="ID"></vprop:propertyAlias>
+
 
   <message name="OrderAdmissionRequest">
     <part name="PatientData" element="pat:Patient" />

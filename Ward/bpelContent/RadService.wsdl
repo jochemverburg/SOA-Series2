@@ -3,8 +3,10 @@
   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
   xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:s0="http://www.PAHospital.org/RadiologyService/"
-  xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop"
+  xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:radcb="http://www.PAHospital.org/RadiologyCallbackService/"
   targetNamespace="http://www.PAHospital.org/RadiologyService/">
+
+<import location="RadService-callback.wsdl" namespace="http://www.PAHospital.org/RadiologyCallbackService/"/>
 
   <types>
     <xsd:schema targetNamespace="http://www.PAHospital.org/RadiologyService/">
@@ -59,8 +61,9 @@
 <vprop:property name="PatientID" type="xsd:string"/>
 
 <vprop:propertyAlias propertyName="s0:RadiologyOrderID" messageType="s0:RadiologyOrderRadExaminationResponse" part="RadiologyOrderID" element="RadiologyOrderID"></vprop:propertyAlias>
-<vprop:propertyAlias propertyName="s0:PatientID" messageType="s0:RadiologyOrderRadExaminationRequest" part="Order" element="PatientID"></vprop:propertyAlias>
-
+<vprop:propertyAlias propertyName="s0:PatientID" messageType="s0:RadiologyOrderRadExaminationRequest" part="Order" element="RadiologyOrder"><vprop:query>PatientID</vprop:query></vprop:propertyAlias>
+<vprop:propertyAlias propertyName="s0:RadiologyOrderID" messageType="radcb:RadiologyReportRequest" part="RadiologyReport" element="RadiologyReport"><vprop:query>RadiologyOrderID</vprop:query></vprop:propertyAlias>
+<vprop:propertyAlias propertyName="s0:PatientID" messageType="radcb:RadiologyReportRequest" part="RadiologyReport" element="RadiologyReport"><vprop:query>PatientID</vprop:query></vprop:propertyAlias>
 
   <message name="RadiologyOrderRadExaminationRequest">
     <part name="Order" element="s0:RadiologyOrder" />
