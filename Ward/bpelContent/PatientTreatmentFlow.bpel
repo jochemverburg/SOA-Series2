@@ -87,7 +87,13 @@
 	                <bpel:to part="PatientName" variable="eprReq"></bpel:to>
 	            </bpel:copy>
 	        </bpel:assign>	        
-	        <bpel:invoke name="getIDsByName" partnerLink="epr" operation="GetPatientIDsByName" portType="pat:ElectronicPatientRecord" inputVariable="eprReq" outputVariable="eprResp"></bpel:invoke>    
+	        <bpel:invoke name="getIDsByName" partnerLink="epr" operation="GetPatientIDsByName" portType="pat:ElectronicPatientRecord" inputVariable="eprReq" outputVariable="eprResp"></bpel:invoke>
+	        <bpel:assign>
+	        	<bpel:copy>
+		        	<bpel:from variable="eprResp" part="PatientIDsList">[0]</bpel:from>
+		        	<bpel:to variable="admResp" part="PatientID">ID</bpel:to>
+	        	</bpel:copy>
+	        </bpel:assign>    
 	        <bpel:if name="CheckIfExists">
 	            <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[$admRequest.PatientData[PatientID]=""]]></bpel:condition>
 	            <bpel:sequence>
@@ -114,12 +120,6 @@
 	                                <![CDATA[PatientID]]>
 	                            </bpel:query>
 	                        </bpel:to>
-	                    </bpel:copy>
-	                    <!-- Copy the new id back in the request, to return later 
-	                    Is dit deel niet verkeerd om? En moet dit niet een query zijn?-->
-	                     <bpel:copy>
-	                        <bpel:from part="Patient" variable="createEPRReq">PatientID</bpel:from>
-	                        <bpel:to variable="admRequest" part="PatientData">PatientID</bpel:to>
 	                    </bpel:copy>
 	                    <bpel:copy>
 	                        <bpel:from part="PatientData" variable="admRequest">
@@ -164,7 +164,13 @@
 	                        </bpel:to>
 	                    </bpel:copy>
 	                </bpel:assign>
-	                <bpel:invoke name="MakeRecord" partnerLink="epr" operation="CreatePatientRecord" portType="pat:ElectronicPatientRecord" inputVariable="createEPRReq" outputVariable="createEPRResp"></bpel:invoke>	                
+	                <bpel:invoke name="MakeRecord" partnerLink="epr" operation="CreatePatientRecord" portType="pat:ElectronicPatientRecord" inputVariable="createEPRReq" outputVariable="createEPRResp"></bpel:invoke>
+	                <bpel:assign>
+				    	<bpel:copy>
+				           <bpel:from variable="createEPRResp" part="PatientID">PatientID</bpel:from>
+				           <bpel:to variable="admResp" part="PatientID">ID</bpel:to>
+				        </bpel:copy>
+				   	</bpel:assign>  	                
 	                </bpel:sequence> 	           
 	        </bpel:if> 
 	    <bpel:assign>
