@@ -32,6 +32,7 @@
             <xsd:element name="PatientID" type="xsd:string" />
             <xsd:element name="CaseID" type="xsd:string" />
       		<xsd:element name="TransportRequired" type="xsd:boolean"/>
+      		<xsd:element name="AppointmentDate" type="xsd:date"/>
             <xsd:element name="ExaminationType">
               <xsd:simpleType>
                 <xsd:restriction base="xsd:string">
@@ -55,6 +56,8 @@
 <vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:ViewRadiologyReportRequest" part="PatientID" element="ID"></vprop:propertyAlias>
 <vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:ValidateReportsRequest" part="PatientID" element="ID"></vprop:propertyAlias>
 <vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:GenerateDischargeLetterRequest" part="PatientID" element="ID"></vprop:propertyAlias>
+<vprop:propertyAlias propertyName="tns:PatientID" messageType="labcb:SendLabReportResponse" part="LabReport" element="LabReport"><vprop:query>PatientID</vprop:query></vprop:propertyAlias>
+<vprop:propertyAlias propertyName="tns:PatientID" messageType="radcb:RadiologyReportRequest" part="RadiologyReport" element="RadiologyReport"><vprop:query>PatientID</vprop:query></vprop:propertyAlias>
 
 
   <message name="OrderAdmissionRequest">
