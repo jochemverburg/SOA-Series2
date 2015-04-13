@@ -2,7 +2,7 @@
 <extensionmodel:ExtensionMap xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:extensionmodel="http:///extensionmodel.ecore" xmlns:org.eclipse.bpel.ui.uiextensionmodel="http:///org/eclipse/bpel/ui/uiextensionmodel.ecore" namespace="http://org.eclipse.bpel.ui/">
   <extensions>
     <extendedObject href="PatientTreatmentFlow.bpel#/"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1428928383000"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1428935738412"/>
   </extensions>
   <extensions>
     <extendedObject href="PatientTreatmentFlow.bpel#//@variables/@children.0"/>
@@ -395,5 +395,13 @@
   <extensions>
     <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.2"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.1/@activities.2/@copy.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="PatientTreatmentFlow.bpel#//@activity/@activities.1/@activities.2/@copy.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
   </extensions>
 </extensionmodel:ExtensionMap>

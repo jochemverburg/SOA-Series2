@@ -68,8 +68,8 @@
         <bpel:variable name="viewLabReportRequest" messageType="tns:ViewLabReportRequest"/>
     </bpel:variables>
 	<bpel:correlationSets>
-		<bpel:correlationSet name="labCorr" properties="lab:LabOrderID lab:PatientID"/>
-		<bpel:correlationSet name="radCorr" properties="rad:RadOrderID rad:PatientID"/>
+		<bpel:correlationSet name="labCorr" properties="lab:PatientID"/>
+		<bpel:correlationSet name="radCorr" properties="rad:PatientID"/>
 		<bpel:correlationSet name="wardCorr" properties="tns:PatientID"/>
 	</bpel:correlationSets>
 
@@ -228,7 +228,7 @@
           </bpel:assign>
           <bpel:invoke name="RequestLabResults" partnerLink="lab" operation="OrderLabTest" inputVariable="labTestReq" portType="lab:Laboratory" outputVariable="labTestRes">
             <bpel:correlations>
-         		<bpel:correlation set="labCorr" initiate="yes" pattern="request-response"/>
+         		<bpel:correlation set="labCorr" initiate="yes" pattern="request"/>
          	</bpel:correlations> 
          	</bpel:invoke>
           <bpel:receive name="ReceiveLabResults" partnerLink="lab" operation="SendLabReport" variable="labReport" portType="labcb:LabCallback">
@@ -292,7 +292,7 @@
             </bpel:assign>
             <bpel:invoke name="RequestRadReport" partnerLink="rad" operation="OrderRadiologyExamination" inputVariable="radReq" outputVariable="radResponse">
            	<bpel:correlations>
-         		<bpel:correlation set="radCorr" initiate="yes" pattern="request-response" />
+         		<bpel:correlation set="radCorr" initiate="yes" pattern="request" />
          	</bpel:correlations>
             </bpel:invoke>                        
             <bpel:invoke name="InvokeRequestRadiologyAppointment" partnerLink="rad" operation="RequestAppointment" portType="rad:Radiology" inputVariable="radAppointmentRequest" outputVariable="radAppointmentResponse"></bpel:invoke>          
