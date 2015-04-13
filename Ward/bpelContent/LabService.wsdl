@@ -32,8 +32,10 @@
   </types>
 
 <vprop:property name="LabOrderID" type="xsd:string"/>
+<vprop:property name="PatientID" type="xsd:string"/>
 
 <vprop:propertyAlias propertyName="s0:LabOrderID" messageType="s0:LaboratoryOrderLabTestResponse" part="LabOrderID" element="LabOrderId"></vprop:propertyAlias>
+<vprop:propertyAlias propertyName="s0:PatientID" messageType="s0:LaboratoryOrderLabTestRequest" part="LabOrder" element="PatientID"></vprop:propertyAlias>
 
 
   <message name="LaboratoryOrderLabTestRequest">

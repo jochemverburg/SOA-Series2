@@ -28,10 +28,6 @@
     </xsd:schema>
   </types>
 
-<vprop:property name="LabOrderID" type="xsd:string"/>
-
-<vprop:propertyAlias propertyName="s0:LabOrderID" messageType="s0:SendLabReportResponse" part="LabReport" element="LabOrderID"></vprop:propertyAlias>
-
   <message name="SendLabReportResponse">
     <part name="LabReport" element="s0:LabReport" />
   </message>

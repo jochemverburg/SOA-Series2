@@ -13,6 +13,7 @@
   xmlns:pat="http://www.PAHospital.org/PatService/" 
   xmlns:transp="http://www.PAHospital.org/TransportationService/"
   xmlns:tns="http://www.PAHospital.org/WardService/"
+  xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop"
   targetNamespace="http://www.PAHospital.org/WardService/">
  	
 <import namespace="http://www.PAHospital.org/LabService/" location="LabService.wsdl"/>
@@ -21,6 +22,7 @@
 <import namespace="http://www.PAHospital.org/RadiologyCallbackService/" location="RadService-callback.wsdl"/>
 <import namespace="http://www.PAHospital.org/PatService/" location="PatService.wsdl"/>
 <import namespace="http://www.PAHospital.org/TransportationService/" location="TranspService.wsdl"/>
+
 <types>
 	<xsd:schema targetNamespace="http://www.PAHospital.org/WardService/">
 		<xsd:element name="ID" type="xsd:string"></xsd:element>
@@ -44,7 +46,11 @@
 	</xsd:schema>
 
 </types>
+<vprop:property name="PatientID" type="xsd:string"/>
 
+<vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:OrderAdmissionResponse" part="PatientID" element="ID"></vprop:propertyAlias>
+<vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:EnterLabTestOrderDataRequest" part="LabTestData" element="LabOrder"><query>lab:PatientID</query></vprop:propertyAlias>
+<vprop:propertyAlias propertyName="tns:PatientID" messageType="tns:EnterRadiologyOrderDataRequest" part="RadOrderData" element="PatientID"></vprop:propertyAlias>
 
   <message name="OrderAdmissionRequest">
     <part name="PatientData" element="pat:Patient" />
